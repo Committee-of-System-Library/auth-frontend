@@ -7,7 +7,12 @@ export default {
         "./src/**/*.{ts,tsx}",
     ],
     theme: {
-        extend: {},
+        extend: {
+            colors: {
+                primary: '#615FFF',
+                'left-bg': '#F8FAFF',
+                'button-gray': '#DADADA',
+            },
+        },
     },
-    plugins: [],
 } satisfies Config

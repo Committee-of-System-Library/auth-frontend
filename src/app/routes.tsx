@@ -1,5 +1,5 @@
 import { createBrowserRouter } from "react-router-dom"
-import LoginPage from "../pages/LoginPage"
+import LoginPage from "../pages/login/LoginPage"
 import AuthCallbackPage from "../pages/AuthCallbackPage"
 import ConsentPage from "../pages/ConsentPage"
 import ErrorPage from "../pages/ErrorPage"
