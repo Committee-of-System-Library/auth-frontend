@@ -1,7 +1,7 @@
 import { createBrowserRouter } from "react-router-dom"
 import LoginPage from "../pages/login/LoginPage"
 import AuthCallbackPage from "../pages/AuthCallbackPage"
-import ConsentPage from "../pages/ConsentPage"
+import ConsentPage from "../pages/consent/ConsentPage"
 import ErrorPage from "../pages/ErrorPage"
 
 export const router = createBrowserRouter([
