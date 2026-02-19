@@ -1,31 +1,9 @@
-import { useState } from 'react'
-
-const translations = {
-    ko: {
-        welcome: '경북대학교 컴퓨터학부 통합인증시스템 방문을 환영합니다.',
-        welcomeMobile: '경북대학교 컴퓨터학부 통합인증시스템\n방문을 환영합니다.',
-        googleLogin: 'Google 계정으로 로그인',
-        notice: '경북대학교 Google Workspace 계정(@knu.ac.kr)만 로그인 가능합니다.',
-        noticeMobile: '경북대학교 Google Workspace 계정(@knu.ac.kr)만\n 로그인 가능합니다.',
-        terms: '이용 약관',
-        privacy: '개인정보처리방침',
-        emailPolicy: '이메일무단수집거부',
-    },
-    en: {
-        welcome: 'Welcome to KNU CSE Integrated Authentication System.',
-        welcomeMobile: 'Welcome to KNU CSE Integrated Authentication System.',
-        googleLogin: 'Sign in with Google',
-        notice: 'Only Kyungpook National University Google Workspace accounts (@knu.ac.kr) can sign in.',
-        noticeMobile: 'Only Kyungpook National University Google Workspace accounts (@knu.ac.kr) can sign in.',
-        terms: 'Terms of Service',
-        privacy: 'Privacy Policy',
-        emailPolicy: 'Email Collection Refusal',
-    },
-}
+import { useLanguage } from '@/contexts/LanguageContext'
+import { loginTranslations } from '../translations'
 
 export default function LoginCardSection() {
-    const [language, setLanguage] = useState<'ko' | 'en'>('ko')
-    const t = translations[language]
+    const { language, setLanguage } = useLanguage()
+    const t = loginTranslations[language]
 
     return (
         <div className="w-full lg:w-[55%] bg-white rounded-2xl shadow-md p-6 lg:p-10 mb-6 lg:mb-0 flex flex-col justify-between max-h-[90vh] order-1 lg:order-2">
