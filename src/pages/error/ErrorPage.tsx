@@ -1,8 +1,8 @@
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { AlertTriangle } from 'lucide-react'
-import { ERROR_MESSAGES, type ErrorCode } from './error/constants/errorMessages'
-import { ROUTES, QUERY_PARAMS } from '../shared/constants/routes'
-import PageContainer from '../shared/components/PageContainer'
+import { ERROR_MESSAGES, type ErrorCode } from './constants/errorMessages'
+import { ROUTES, QUERY_PARAMS } from '../../shared/constants/routes'
+import PageContainer from '../../shared/components/PageContainer'
 
 const DEFAULT_ERROR_CODE: ErrorCode = 'network_error'
 
@@ -31,8 +31,8 @@ export default function ErrorPage() {
     <PageContainer maxWidth="2xl">
       {/* 에러 아이콘 및 제목 */}
       <div className="flex flex-col items-center mb-8">
-        <div className="w-16 h-16 rounded-full bg-red-100 flex items-center justify-center mb-4">
-          <AlertTriangle className="w-8 h-8 text-red-600" />
+        <div className="w-16 h-16 rounded-full flex items-center justify-center mb-4">
+          <AlertTriangle className="w-12 h-12 text-primary" />
         </div>
         <h2 className="text-primary text-xl lg:text-2xl font-bold mb-2">
           {errorMessage.title}

@@ -6,7 +6,10 @@ import { ReactNode } from 'react'
  */
 interface PageContainerProps {
     children: ReactNode
+    /** 모바일/태블릿 최대 너비 */
     maxWidth?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '4xl' | 'full'
+    /** PC(lg 이상) 최대 너비. 없으면 maxWidth와 동일 */
+    maxWidthLg?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '4xl' | 'full'
     className?: string
 }
 
@@ -23,12 +26,14 @@ const maxWidthClasses = {
 export default function PageContainer({ 
     children, 
     maxWidth = 'md',
+    maxWidthLg,
     className = '' 
 }: PageContainerProps) {
+    const lgClass = maxWidthLg ? `lg:${maxWidthClasses[maxWidthLg]}` : `lg:${maxWidthClasses[maxWidth]}`
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-50 px-6 lg:px-24 py-8">
             <div 
-                className={`w-full ${maxWidthClasses[maxWidth]} bg-white rounded-2xl shadow-md p-6 lg:p-10 flex flex-col ${className}`}
+                className={`w-full ${maxWidthClasses[maxWidth]} ${lgClass} bg-white rounded-2xl shadow-md p-6 lg:p-10 flex flex-col ${className}`}
             >
                 {children}
             </div>

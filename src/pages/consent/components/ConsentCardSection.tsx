@@ -1,18 +1,41 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import ConsentAgreementItem from './ConsentAgreementItem'
 import { CONSENT_ITEMS } from '../constants/consentContent'
+import { ROUTES } from '../../../shared/constants/routes'
 
 export default function ConsentCardSection() {
     const navigate = useNavigate()
+    const location = useLocation()
+    const formData = location.state?.formData // 회원가입 폼에서 전달된 데이터
+    const isSignupFlow = !!formData // 회원가입 플로우인지 확인
+
     const [termsAgreed, setTermsAgreed] = useState(false)
     const [privacyAgreed, setPrivacyAgreed] = useState(false)
 
     const handleContinue = () => {
         if (termsAgreed && privacyAgreed) {
-            console.log('Consent submitted:', { termsAgreed, privacyAgreed })
-            // TODO: Backend API call will be added later
-            navigate('/')
+            if (isSignupFlow) {
+                // 회원가입 플로우: 백엔드 API 호출 후 메인 페이지로 이동
+                // TODO: 백엔드 API 호출
+                // try {
+                //     await signupApi({ ...formData, termsAgreed, privacyAgreed })
+                //     // 회원가입 성공 시 메인 페이지로 리다이렉션 (백엔드에서 처리)
+                //     // navigate(ROUTES.MAIN)
+                // } catch (error) {
+                //     // 에러 처리
+                //     console.error('회원가입 실패:', error)
+                // }
+
+                // 임시: 백엔드 없이 메인 페이지로 이동
+                console.log('회원가입 정보:', { ...formData, termsAgreed, privacyAgreed })
+                navigate(ROUTES.MAIN)
+            } else {
+                // 기존 플로우
+                console.log('Consent submitted:', { termsAgreed, privacyAgreed })
+                // TODO: Backend API call will be added later
+                navigate(ROUTES.HOME)
+            }
         }
     }
 
@@ -29,7 +52,7 @@ export default function ConsentCardSection() {
     }
 
     return (
-        <div className="w-full max-w-4xl bg-white rounded-2xl shadow-md p-6 lg:p-10 flex flex-col">
+        <div className="w-full max-w-md lg:max-w-xl bg-white rounded-2xl shadow-md p-6 lg:p-10 flex flex-col">
             {/* 상단 영역 */}
             <div>
                 {/* CONSENT 타이틀 */}
@@ -56,17 +79,27 @@ export default function ConsentCardSection() {
                 ))}
             </div>
 
-            {/* 동의하고 계속 버튼 */}
-            <div className="flex justify-center mt-2">
+            {/* 버튼 영역: 뒤로가기 | 동의하고 회원가입 (회원가입 플로우) / 동의하고 계속 (기타) */}
+            <div className="flex gap-3 mt-2">
+                {isSignupFlow && (
+                    <button
+                        type="button"
+                        onClick={() => navigate(-1)}
+                        className="flex-1 rounded-lg px-4 py-4 font-medium text-sm lg:text-base border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 transition-colors"
+                    >
+                        뒤로가기
+                    </button>
+                )}
                 <button
+                    type="button"
                     onClick={handleContinue}
                     disabled={!isContinueEnabled}
-                    className={`w-[60%] rounded-lg px-2 py-4 font-medium text-sm lg:text-base transition-colors ${isContinueEnabled
+                    className={`flex-1 rounded-lg px-4 py-4 font-medium text-sm lg:text-base transition-colors ${isContinueEnabled
                         ? 'bg-primary text-white hover:bg-primary/90'
                         : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                         }`}
                 >
-                    동의하고 계속
+                    {isSignupFlow ? '동의하고 회원가입' : '동의하고 계속'}
                 </button>
             </div>
         </div>

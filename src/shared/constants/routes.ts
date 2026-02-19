@@ -7,6 +7,8 @@ export const ROUTES = {
     AUTH_CALLBACK: '/auth/callback',
     CONSENT: '/consent',
     ERROR: '/error',
+    SIGNUP_FORM: '/signup',
+    MAIN: '/main',
 } as const
 
 /**
