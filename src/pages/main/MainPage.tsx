@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom'
+import { Button } from '@/components/ui/button'
 import PageContainer from '@/shared/components/PageContainer'
 import { ROUTES } from '@/shared/constants/routes'
 
@@ -35,12 +36,9 @@ export default function MainPage() {
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                    <button
-                        onClick={() => navigate(ROUTES.LOGIN)}
-                        className="px-6 py-3 bg-primary text-white rounded-lg font-medium hover:bg-primary/90 transition-colors"
-                    >
+                    <Button onClick={() => navigate(ROUTES.LOGIN)}>
                         로그인 페이지로
-                    </button>
+                    </Button>
                 </div>
             </div>
         </PageContainer>

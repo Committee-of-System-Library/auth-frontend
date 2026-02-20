@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import ConsentAgreementItem from './ConsentAgreementItem'
+import { Button } from '@/components/ui/button'
 import { CONSENT_ITEMS } from '@/pages/consent/constants/consentContent'
 import { ROUTES } from '@/shared/constants/routes'
 import type { SignupFormData } from '@/pages/signup/types'
@@ -83,25 +84,26 @@ export default function ConsentCardSection() {
             {/* 버튼 영역: 뒤로가기 | 동의하고 회원가입 (회원가입 플로우) / 동의하고 계속 (기타) */}
             <div className="flex gap-3 mt-2">
                 {isSignupFlow && (
-                    <button
+                    <Button
                         type="button"
+                        variant="outline"
+                        size="lg"
+                        className="flex-1"
                         onClick={() => navigate(-1)}
-                        className="flex-1 rounded-lg px-4 py-4 font-medium text-sm lg:text-base border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 transition-colors"
                     >
                         뒤로가기
-                    </button>
+                    </Button>
                 )}
-                <button
+                <Button
                     type="button"
+                    size="lg"
+                    className="flex-1"
                     onClick={handleContinue}
                     disabled={!isContinueEnabled}
-                    className={`flex-1 rounded-lg px-4 py-4 font-medium text-sm lg:text-base transition-colors ${isContinueEnabled
-                        ? 'bg-primary text-white hover:bg-primary/90'
-                        : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                        }`}
+                    variant={isContinueEnabled ? 'primary' : 'secondary'}
                 >
                     {isSignupFlow ? '동의하고 회원가입' : '동의하고 계속'}
-                </button>
+                </Button>
             </div>
         </div>
     )

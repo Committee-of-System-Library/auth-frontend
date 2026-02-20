@@ -1,5 +1,6 @@
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { AlertTriangle } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 import { ERROR_MESSAGES, type ErrorCode } from './constants/errorMessages'
 import { ROUTES, QUERY_PARAMS } from '@/shared/constants/routes'
 import PageContainer from '@/shared/components/PageContainer'
@@ -44,18 +45,12 @@ export default function ErrorPage() {
 
       {/* 버튼 영역 */}
       <div className="flex flex-col sm:flex-row gap-3 justify-center mb-6">
-        <button
-          onClick={handleRetryLogin}
-          className="w-full sm:w-auto px-6 py-3 bg-primary text-white rounded-lg font-medium hover:bg-primary/90 transition-colors"
-        >
+        <Button onClick={handleRetryLogin} className="w-full sm:w-auto">
           다시 로그인
-        </button>
-        <button
-          onClick={handleGoToMain}
-          className="w-full sm:w-auto px-6 py-3 bg-gray-200 text-gray-800 rounded-lg font-medium hover:bg-gray-300 transition-colors"
-        >
+        </Button>
+        <Button variant="secondary" onClick={handleGoToMain} className="w-full sm:w-auto">
           메인으로
-        </button>
+        </Button>
       </div>
 
       {/* 개발 모드 디버그 정보 */}
