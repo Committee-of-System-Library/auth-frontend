@@ -5,7 +5,6 @@ export const ROUTES = {
     HOME: '/',
     LOGIN: '/',
     AUTH_CALLBACK: '/auth/callback',
-    CALLBACK: '/callback',
     CONSENT: '/consent',
     ERROR: '/error',
     SIGNUP_FORM: '/signup',

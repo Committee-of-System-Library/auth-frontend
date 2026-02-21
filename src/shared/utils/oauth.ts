@@ -5,8 +5,6 @@ export const OAUTH_STATE_KEY = 'oauth_state'
 
 const AUTH_SERVER_BASE_URL = import.meta.env.VITE_AUTH_SERVER_BASE_URL as string
 const FRONTEND_BASE_URL = import.meta.env.VITE_FRONTEND_BASE_URL as string
-/** 로그인 시작 경로. Keycloak은 예: /realms/REALM명/protocol/openid-connect/auth */
-const AUTH_LOGIN_PATH = (import.meta.env.VITE_AUTH_LOGIN_PATH as string) || '/login'
 
 function getAuthServerBaseUrl(): string {
   const url = AUTH_SERVER_BASE_URL?.trim()
@@ -16,11 +14,6 @@ function getAuthServerBaseUrl(): string {
     )
   }
   return url.replace(/\/$/, '') // 끝 슬래시 제거
-}
-
-function getLoginPath(): string {
-  const path = (AUTH_LOGIN_PATH && AUTH_LOGIN_PATH.trim()) || '/login'
-  return path.startsWith('/') ? path : `/${path}`
 }
 
 /**
@@ -34,19 +27,19 @@ export function saveOAuthState(): string {
 
 /**
  * OAuth 로그인 URL을 생성한다.
- * redirect_uri = FRONTEND_BASE_URL + '/callback'
+ * Auth Server /login으로 이동 (서버가 Keycloak으로 302).
+ * redirect_uri = FRONTEND_BASE_URL + '/auth/callback'
  */
 export function buildOAuthLoginUrl(): string {
   const baseUrl = getAuthServerBaseUrl()
-  const loginPath = getLoginPath()
   const state = saveOAuthState()
   const frontendOrigin = (FRONTEND_BASE_URL && FRONTEND_BASE_URL.trim()) || window.location.origin
-  const redirectUri = `${frontendOrigin.replace(/\/$/, '')}/callback`
+  const redirectUri = `${frontendOrigin.replace(/\/$/, '')}/auth/callback`
   const params = new URLSearchParams({
     redirect_uri: redirectUri,
     state,
   })
-  return `${baseUrl}${loginPath}?${params.toString()}`
+  return `${baseUrl}/login?${params.toString()}`
 }
 
 /**

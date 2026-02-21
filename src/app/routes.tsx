@@ -9,7 +9,6 @@ import MainPage from '@/pages/main/MainPage'
 export const router = createBrowserRouter([
     { path: "/", element: <LoginPage /> },
     { path: "/auth/callback", element: <AuthCallbackPage /> },
-    { path: "/callback", element: <AuthCallbackPage /> },
     { path: "/consent", element: <ConsentPage /> },
     { path: "/error", element: <ErrorPage /> },
     { path: "/signup", element: <SignupFormPage /> },
