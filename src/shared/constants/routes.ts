@@ -5,6 +5,7 @@ export const ROUTES = {
     HOME: '/',
     LOGIN: '/',
     AUTH_CALLBACK: '/auth/callback',
+    CALLBACK: '/callback',
     CONSENT: '/consent',
     ERROR: '/error',
     SIGNUP_FORM: '/signup',
@@ -18,5 +19,6 @@ export const QUERY_PARAMS = {
     REDIRECT: 'redirect',
     CODE: 'code',
     REQUEST_ID: 'requestId',
+    STATE: 'state',
 } as const
 
