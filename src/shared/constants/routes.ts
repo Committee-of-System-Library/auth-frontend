@@ -18,5 +18,6 @@ export const QUERY_PARAMS = {
     REDIRECT: 'redirect',
     CODE: 'code',
     REQUEST_ID: 'requestId',
+    STATE: 'state',
 } as const
 

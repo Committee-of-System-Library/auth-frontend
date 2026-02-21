@@ -1,9 +1,14 @@
 import { useLanguage } from '@/contexts/LanguageContext'
+import { buildOAuthLoginUrl } from '@/shared/utils/oauth'
 import { loginTranslations } from '../translations'
 
 export default function LoginCardSection() {
     const { language, setLanguage } = useLanguage()
     const t = loginTranslations[language]
+
+    const handleLoginClick = () => {
+        window.location.href = buildOAuthLoginUrl()
+    }
 
     return (
         <div className="w-full lg:w-[55%] bg-white rounded-2xl shadow-md p-6 lg:p-10 mb-6 lg:mb-0 flex flex-col justify-between max-h-[90vh] order-1 lg:order-2">
@@ -50,7 +55,7 @@ export default function LoginCardSection() {
 
             {/* Google 로그인 버튼 - 세로 중앙 */}
             <div className="flex-1 flex items-center justify-center my-16 lg:my-4 min-h-0">
-                <button className="w-[80%] bg-white border border-[1.5px] border-button-gray/80 rounded-lg px-4 py-4 lg:px-6 lg:py-6 flex flex-col items-center justify-center gap-2 lg:gap-3 hover:border-gray-400 transition-colors">
+                <button type="button" onClick={handleLoginClick} className="w-[80%] bg-white border border-[1.5px] border-button-gray/80 rounded-lg px-4 py-4 lg:px-6 lg:py-6 flex flex-col items-center justify-center gap-2 lg:gap-3 hover:border-gray-400 transition-colors">
                     {/* Google G 로고 */}
                     <div className="w-8 h-8 lg:w-12 lg:h-12 flex items-center justify-center">
                         <img src="/Googlelogo.svg" alt="Google" className="w-full h-full" />

@@ -27,5 +27,9 @@ export const ERROR_MESSAGES: Record<ErrorCode, ErrorMessage> = {
         title: '세션 검증 실패',
         description: '로그인 세션을 확인할 수 없습니다. 다시 로그인해주세요.',
     },
+    state_mismatch: {
+        title: '로그인 검증 실패',
+        description: 'state가 일치하지 않습니다. 다시 로그인해주세요.',
+    },
 }
 

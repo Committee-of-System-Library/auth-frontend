@@ -8,6 +8,7 @@ export type ErrorCode =
     | 'network_error'
     | 'invalid_redirect'
     | 'session_failed'
+    | 'state_mismatch'
 
 /**
  * 에러 메시지 인터페이스

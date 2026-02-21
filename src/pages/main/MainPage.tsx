@@ -26,15 +26,6 @@ export default function MainPage() {
                     </p>
                 </div>
 
-                <div className="bg-gray-50 rounded-lg p-6 mb-6">
-                    <p className="text-gray-700 text-base mb-4">
-                        회원가입이 완료되었습니다.
-                    </p>
-                    <p className="text-gray-600 text-sm">
-                        백엔드 연동 후 자동으로 메인 페이지로 리다이렉션됩니다.
-                    </p>
-                </div>
-
                 <div className="flex flex-col sm:flex-row gap-3 justify-center">
                     <Button onClick={() => navigate(ROUTES.LOGIN)}>
                         로그인 페이지로
