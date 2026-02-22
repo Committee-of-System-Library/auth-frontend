@@ -133,7 +133,30 @@ src/
 
 ---
 
-## 환경별 배포 (Docker 등)
+## Docker 이미지 빌드 및 푸시 (GHCR)
 
-- `VITE_*` 값은 **빌드 시점**에 코드에 포함됩니다.
-- Docker 이미지 빌드 시 `ARG` / `ENV` 로 위 변수들을 넘겨 `vite build` 하면 됩니다.
+프로젝트 루트에 `Dockerfile`이 있습니다. 순수 React/Vite 빌드 후 nginx로 서빙하는 이미지를 만듭니다.
+
+**1. 이미지 빌드**
+
+```bash
+# 환경 변수 없이 (기본값/빈 값으로 빌드)
+docker build -t ghcr.io/committee-of-system-library/knu-cse-official-client:latest .
+
+# 배포 환경 URL 넣어서 빌드 (선택)
+docker build \
+  --build-arg VITE_AUTH_SERVER_BASE_URL=https://auth.example.com \
+  --build-arg VITE_FRONTEND_BASE_URL=https://client.example.com \
+  -t ghcr.io/committee-of-system-library/knu-cse-official-client:latest .
+```
+
+**2. GHCR에 푸시**
+
+```bash
+# GitHub 로그인 (토큰: Settings → Developer settings → Personal access tokens, write:packages)
+echo "YOUR_GITHUB_TOKEN" | docker login ghcr.io -u YOUR_GITHUB_USERNAME --password-stdin
+
+docker push ghcr.io/committee-of-system-library/knu-cse-official-client:latest
+```
+
+팀에서 이미지 이름을 `knu-cse-auth-client` 등으로 쓰라고 하면 `-t` 뒤 이름만 바꾸면 됩니다.
