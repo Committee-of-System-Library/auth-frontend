@@ -6,8 +6,10 @@ export default function LoginCardSection() {
     const { language, setLanguage } = useLanguage()
     const t = loginTranslations[language]
 
+    // 같은 탭에서 리다이렉트 (target="_blank" / window.open 사용 금지 → 다른 탭이면 sessionStorage 공유 안 됨)
     const handleLoginClick = () => {
-        window.location.href = buildOAuthLoginUrl()
+        const url = buildOAuthLoginUrl()
+        window.location.href = url
     }
 
     return (

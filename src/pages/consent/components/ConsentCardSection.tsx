@@ -4,40 +4,50 @@ import ConsentAgreementItem from './ConsentAgreementItem'
 import { Button } from '@/components/ui/button'
 import { CONSENT_ITEMS } from '@/pages/consent/constants/consentContent'
 import { ROUTES } from '@/shared/constants/routes'
+import { authApi } from '@/shared/api/auth.api'
+import { HttpError } from '@/shared/api/http'
 import type { SignupFormData } from '@/pages/signup/types'
 
 export default function ConsentCardSection() {
     const navigate = useNavigate()
     const location = useLocation()
     const formData = location.state?.formData as SignupFormData | undefined
-    const isSignupFlow = !!formData // 회원가입 플로우인지 확인
+    const isSignupFlow = !!formData
 
     const [termsAgreed, setTermsAgreed] = useState(false)
     const [privacyAgreed, setPrivacyAgreed] = useState(false)
+    const [submitError, setSubmitError] = useState<string | null>(null)
+    const [isSubmitting, setIsSubmitting] = useState(false)
 
-    const handleContinue = () => {
-        if (termsAgreed && privacyAgreed) {
-            if (isSignupFlow) {
-                // 회원가입 플로우: 백엔드 API 호출 후 메인 페이지로 이동
-                // TODO: 백엔드 API 호출
-                // try {
-                //     await signupApi({ ...formData, termsAgreed, privacyAgreed })
-                //     // 회원가입 성공 시 메인 페이지로 리다이렉션 (백엔드에서 처리)
-                //     // navigate(ROUTES.MAIN)
-                // } catch (error) {
-                //     // 에러 처리
-                //     console.error('회원가입 실패:', error)
-                // }
+    const handleContinue = async () => {
+        if (!termsAgreed || !privacyAgreed) return
 
-                // 임시: 백엔드 없이 메인 페이지로 이동
-                console.log('회원가입 정보:', { ...formData, termsAgreed, privacyAgreed })
+        if (isSignupFlow && formData) {
+            setSubmitError(null)
+            setIsSubmitting(true)
+            try {
+                await authApi.signup({
+                    studentNumber: formData.studentId,
+                    major: formData.major,
+                    grade: formData.grade,
+                })
                 navigate(ROUTES.MAIN)
-            } else {
-                // 기존 플로우
-                console.log('Consent submitted:', { termsAgreed, privacyAgreed })
-                // TODO: Backend API call will be added later
-                navigate(ROUTES.HOME)
+            } catch (err) {
+                let message = '회원가입에 실패했습니다. 다시 시도해 주세요.'
+                if (err instanceof HttpError && err.responseText) {
+                    try {
+                        const body = JSON.parse(err.responseText) as { message?: string }
+                        if (body.message) message = body.message
+                    } catch {
+                        // ignore
+                    }
+                }
+                setSubmitError(message)
+            } finally {
+                setIsSubmitting(false)
             }
+        } else {
+            navigate(ROUTES.HOME)
         }
     }
 
@@ -81,6 +91,12 @@ export default function ConsentCardSection() {
                 ))}
             </div>
 
+            {submitError && (
+                <p className="text-sm text-red-600 text-center mt-2" role="alert">
+                    {submitError}
+                </p>
+            )}
+
             {/* 버튼 영역: 뒤로가기 | 동의하고 회원가입 (회원가입 플로우) / 동의하고 계속 (기타) */}
             <div className="flex gap-3 mt-2">
                 {isSignupFlow && (
@@ -90,6 +106,7 @@ export default function ConsentCardSection() {
                         size="lg"
                         className="flex-1"
                         onClick={() => navigate(-1)}
+                        disabled={isSubmitting}
                     >
                         뒤로가기
                     </Button>
@@ -99,10 +116,14 @@ export default function ConsentCardSection() {
                     size="lg"
                     className="flex-1"
                     onClick={handleContinue}
-                    disabled={!isContinueEnabled}
+                    disabled={!isContinueEnabled || isSubmitting}
                     variant={isContinueEnabled ? 'primary' : 'secondary'}
                 >
-                    {isSignupFlow ? '동의하고 회원가입' : '동의하고 계속'}
+                    {isSignupFlow && isSubmitting
+                        ? '처리 중...'
+                        : isSignupFlow
+                          ? '동의하고 회원가입'
+                          : '동의하고 계속'}
                 </Button>
             </div>
         </div>

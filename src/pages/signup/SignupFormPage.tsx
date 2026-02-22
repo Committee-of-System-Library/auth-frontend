@@ -57,12 +57,8 @@ export default function SignupFormPage() {
             major: formData.major,
             grade: formData.grade as SignupFormData['grade'],
         }
-
-        // TODO: 백엔드 API 호출 후 동의/메인 이동
-        setTimeout(() => {
-            navigate(ROUTES.CONSENT, { state: { formData: payload } })
-            setIsSubmitting(false)
-        }, 500)
+        navigate(ROUTES.CONSENT, { state: { formData: payload } })
+        setIsSubmitting(false)
     }
 
     const handleChange = (field: keyof SignupFormState) => (

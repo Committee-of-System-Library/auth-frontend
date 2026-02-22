@@ -31,6 +31,9 @@ export async function authHttp<T>(path: string, init: RequestInit = {}): Promise
             throw new HttpError(res.status, text || res.statusText, text)
         }
 
+        if (res.status === 204) {
+            return undefined as T
+        }
         const contentType = res.headers.get("Content-Type") ?? ""
         if (contentType.includes("application/json")) {
             return (await res.json()) as T

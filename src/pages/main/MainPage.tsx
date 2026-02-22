@@ -1,10 +1,24 @@
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import PageContainer from '@/shared/components/PageContainer'
 import { ROUTES } from '@/shared/constants/routes'
+import { authApi } from '@/shared/api/auth.api'
 
 export default function MainPage() {
     const navigate = useNavigate()
+    const [isLoggingOut, setIsLoggingOut] = useState(false)
+
+    const handleLogout = async () => {
+        setIsLoggingOut(true)
+        try {
+            await authApi.logout()
+            navigate(ROUTES.LOGIN)
+        } catch {
+            setIsLoggingOut(false)
+            navigate(ROUTES.LOGIN)
+        }
+    }
 
     return (
         <PageContainer maxWidth="2xl">
@@ -27,8 +41,8 @@ export default function MainPage() {
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                    <Button onClick={() => navigate(ROUTES.LOGIN)}>
-                        로그인 페이지로
+                    <Button onClick={handleLogout} disabled={isLoggingOut}>
+                        {isLoggingOut ? '로그아웃 중...' : '로그아웃'}
                     </Button>
                 </div>
             </div>

@@ -9,6 +9,8 @@ export type ErrorCode =
     | 'invalid_redirect'
     | 'session_failed'
     | 'state_mismatch'
+    | 'state_missing'
+    | 'state_storage_lost'
 
 /**
  * 에러 메시지 인터페이스
