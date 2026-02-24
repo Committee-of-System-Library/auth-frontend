@@ -59,7 +59,8 @@ jobs:
         run: docker pull ghcr.io/committee-of-system-library/sso-fe:latest
 
       - name: Executing container using Docker Compose
-        run: docker compose \
+        run: |
+          docker compose \
           -f ${{ secrets.SSO_DOCKERFILE_PATH }} \
           --env-file ${{ secrets.SSO_ENV_PATH }} \
           up -d --no-build --pull never \
