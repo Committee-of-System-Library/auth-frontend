@@ -30,14 +30,14 @@ jobs:
       
     - name: Building the image
       run: docker build \
-        -t ghcr.io/sso-fe:latest \
-        -t ghcr.io/sso-fe:${{ steps.getDate.outputs.date }} \
+        -t ghcr.io/committee-of-system-library/sso-fe:latest \
+        -t ghcr.io/committee-of-system-library/sso-fe:${{ steps.getDate.outputs.date }} \
         .
 
     - name: Pushing the image to GHCR
       run: |
-        docker push ghcr.io/sso-fe:latest
-        docker push ghcr.io/sso-fe:${{ steps.getDate.outputs.date }}
+        docker push ghcr.io/committee-of-system-library/sso-fe:latest
+        docker push ghcr.io/committee-of-system-library/sso-fe:${{ steps.getDate.outputs.date }}
 
       
   run-docker-image:
@@ -56,7 +56,7 @@ jobs:
           echo "image=$CURRENT_IMG" >> $GITHUB_OUTPUT
 
       - name: Pulling latest image
-        run: docker pull ghcr.io/sso-fe:latest
+        run: docker pull ghcr.io/committee-of-system-library/sso-fe:latest
 
       - name: Executing container using Docker Compose
         run: docker compose \
