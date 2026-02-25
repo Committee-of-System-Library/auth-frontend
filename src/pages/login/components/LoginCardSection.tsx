@@ -60,7 +60,7 @@ export default function LoginCardSection() {
                 <button type="button" onClick={handleLoginClick} className="w-[80%] bg-white border border-[1.5px] border-button-gray/80 rounded-lg px-4 py-4 lg:px-6 lg:py-6 flex flex-col items-center justify-center gap-2 lg:gap-3 hover:border-gray-400 transition-colors">
                     {/* Google G 로고 */}
                     <div className="w-8 h-8 lg:w-12 lg:h-12 flex items-center justify-center">
-                        <img src="/Googlelogo.svg" alt="Google" className="w-full h-full" />
+                        <img src={`${import.meta.env.BASE_URL}Googlelogo.svg`} alt="Google" className="w-full h-full" />
                     </div>
                     <span className="text-gray-900 font-medium text-sm lg:text-base">{t.googleLogin}</span>
                 </button>
