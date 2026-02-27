@@ -34,9 +34,6 @@ export default function LoginIntroSection() {
             <div className="text-[10px] lg:text-xs text-gray-600 space-y-1 mt-8">
                 <p>{t.footerDept}</p>
                 <p>{t.footerAddress}</p>
-                <p>{t.footerTel}</p>
-                <p>{t.footerFax}</p>
-                <p>{t.footerEmail}</p>
                 <p className="text-gray-500">{t.footerCopyright}</p>
             </div>
         </div>

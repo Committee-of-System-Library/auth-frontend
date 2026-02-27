@@ -51,13 +51,14 @@ export const PRIVACY_CONTENT = `제1조 (개인정보의 수집 및 이용 목�
 export const CONSENT_ITEMS = [
     {
         id: 'terms',
-        label: '[필수] 이용약관 동의',
+        label: '[필수] 이용약관 동의 (자세한 내용은 상단 링크 참조)',
         content: TERMS_CONTENT,
     },
     {
         id: 'privacy',
-        label: '[필수] 개인정보 수집/처리 동의',
+        label: '[필수] 개인정보 수집/처리 동의 (자세한 내용은 상단 링크 참조)',
         content: PRIVACY_CONTENT,
     },
 ] as const
+
 

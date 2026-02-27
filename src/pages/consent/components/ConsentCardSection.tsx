@@ -68,11 +68,26 @@ export default function ConsentCardSection() {
             {/* 상단 영역 */}
             <div>
                 {/* CONSENT 타이틀 */}
-                <div className="mb-4 flex items-center justify-center">
+                <div className="mb-2 flex items-center justify-center">
                     <h2 className="text-primary text-lg lg:text-2xl font-bold whitespace-nowrap">
                         회원가입 필수 약관 동의
                     </h2>
                 </div>
+                <p className="text-xs text-gray-600 text-center mb-4 space-y-1">
+                    <span className="block">
+                        자세한 약관 전문은 아래 링크에서 확인하실 수 있습니다.
+                    </span>
+                    <span className="block">
+                        <a
+                            href="https://discreet-source-909.notion.site/personal-information-collection-and-use-consent-form"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-primary hover:underline"
+                        >
+                            개인정보 수집 및 이용 동의서
+                        </a>
+                    </span>
+                </p>
             </div>
 
             {/* 체크박스 영역 */}

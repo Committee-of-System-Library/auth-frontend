@@ -79,11 +79,32 @@ export default function LoginCardSection() {
                     )}
                 </p>
                 <div className="flex items-center justify-center gap-2 text-xs text-gray-600">
-                    <a href="#" className="hover:text-primary transition-colors">{t.terms}</a>
+                    <a
+                        href="https://discreet-source-909.notion.site/terms-of-services"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="hover:text-primary transition-colors"
+                    >
+                        {t.terms}
+                    </a>
                     <span className="text-gray-400">|</span>
-                    <a href="https://www.knu.ac.kr/wbbs/wbbs/contents/index.action?menu_url=siteinfo/policy01&menu_idx=94" className="hover:text-primary transition-colors">{t.privacy}</a>
+                    <a
+                        href="https://discreet-source-909.notion.site/privacy-policy"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="hover:text-primary transition-colors"
+                    >
+                        {t.privacy}
+                    </a>
                     <span className="text-gray-400">|</span>
-                    <a href="https://www.knu.ac.kr/wbbs/wbbs/contents/index.action?menu_url=siteinfo/policy01_20220128&menu_idx=95" className="hover:text-primary transition-colors">{t.emailPolicy}</a>
+                    <a
+                        href="https://discreet-source-909.notion.site/email-address-harvesting-prohibited"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="hover:text-primary transition-colors"
+                    >
+                        {t.emailPolicy}
+                    </a>
                 </div>
             </div>
         </div>
