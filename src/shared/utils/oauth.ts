@@ -76,7 +76,10 @@ export function buildOAuthLoginUrl(): string {
       : typeof window !== 'undefined' && window.location?.origin
         ? window.location.origin
         : (FRONTEND_BASE_URL && FRONTEND_BASE_URL.trim()) || ''
-  const redirectUri = `${origin.replace(/\/$/, '')}/auth/callback`
+  const basePath = (import.meta.env.VITE_BASE_PATH as string)?.trim()
+    ? `/${(import.meta.env.VITE_BASE_PATH as string).replace(/^\/|\/$/g, '')}`
+    : ''
+  const redirectUri = `${origin.replace(/\/$/, '')}${basePath}/auth/callback`
   const params = new URLSearchParams({
     redirect_uri: redirectUri,
     state,
