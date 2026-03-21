@@ -14,7 +14,7 @@ export type SignupRequest = {
 }
 
 export type SignupResponse = {
-    studentId: number
+    redirectUrl: string | null
 }
 
 /**

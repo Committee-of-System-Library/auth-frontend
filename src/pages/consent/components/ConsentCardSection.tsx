@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 import { CONSENT_ITEMS } from '@/pages/consent/constants/consentContent'
 import { authApi } from '@/shared/api/auth.api'
 import { HttpError } from '@/shared/api/http'
-import { getAuthServerLoginUrl, consumeOAuthQueryString, saveOAuthState, INTERNAL_CLIENT_ID } from '@/shared/utils/oauth'
+import { consumeReturnPath } from '@/shared/utils/oauth'
 import type { SignupFormData } from '@/pages/signup/types'
 
 export default function ConsentCardSection() {
@@ -26,24 +26,17 @@ export default function ConsentCardSection() {
             setSubmitError(null)
             setIsSubmitting(true)
             try {
-                await authApi.signup({
+                const res = await authApi.signup({
                     studentNumber: formData.studentId,
                     major: formData.major,
                 })
-                // 회원가입 성공 → OAuth 플로우 재트리거 (Keycloak 세션이 살아있으므로 자동 로그인 → 원래 서비스 복귀)
-                const savedQuery = consumeOAuthQueryString()
-                if (savedQuery) {
-                    window.location.href = getAuthServerLoginUrl(savedQuery)
+                // 회원가입 성공 → 서버에서 쿠키 설정 완료, redirectUrl로 바로 이동
+                if (res.redirectUrl) {
+                    window.location.href = res.redirectUrl
                 } else {
-                    // fallback: 저장된 query string이 없으면 내부 클라이언트로 auth-server에 직접 요청
-                    const state = saveOAuthState()
-                    const redirectUri = `${window.location.origin}${import.meta.env.BASE_URL}auth/callback`
-                    const params = new URLSearchParams({
-                        client_id: INTERNAL_CLIENT_ID,
-                        redirect_uri: redirectUri,
-                        state,
-                    })
-                    window.location.href = getAuthServerLoginUrl(`?${params.toString()}`)
+                    // fallback: redirectUrl 없으면 저장된 returnPath 또는 기본 페이지로
+                    const returnPath = consumeReturnPath()
+                    navigate(returnPath || '/developer')
                 }
             } catch (err) {
                 let message = '회원가입에 실패했습니다. 다시 시도해 주세요.'
