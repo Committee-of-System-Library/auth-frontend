@@ -2,13 +2,15 @@
  * 애플리케이션 라우트 경로 상수
  */
 export const ROUTES = {
-    HOME: '/',
-    LOGIN: '/',
+    LOGIN: '/login',
     AUTH_CALLBACK: '/auth/callback',
     CONSENT: '/consent',
     ERROR: '/error',
     SIGNUP_FORM: '/signup',
-    MAIN: '/main',
+    DEVELOPER: '/developer',
+    DEVELOPER_APPS: '/developer/apps',
+    DEVELOPER_APPS_NEW: '/developer/apps/new',
+    ADMIN: '/admin',
 } as const
 
 /**
@@ -20,4 +22,3 @@ export const QUERY_PARAMS = {
     REQUEST_ID: 'requestId',
     STATE: 'state',
 } as const
-

@@ -1,11 +1,11 @@
 import { useState } from 'react'
-import { useNavigate, useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import ConsentAgreementItem from './ConsentAgreementItem'
 import { Button } from '@/components/ui/button'
 import { CONSENT_ITEMS } from '@/pages/consent/constants/consentContent'
-import { ROUTES } from '@/shared/constants/routes'
 import { authApi } from '@/shared/api/auth.api'
 import { HttpError } from '@/shared/api/http'
+import { buildOAuthLoginUrl, INTERNAL_CLIENT_ID } from '@/shared/utils/oauth'
 import type { SignupFormData } from '@/pages/signup/types'
 
 export default function ConsentCardSection() {
@@ -31,7 +31,8 @@ export default function ConsentCardSection() {
                     major: formData.major,
                     grade: formData.grade,
                 })
-                navigate(ROUTES.MAIN)
+                // 회원가입 성공 → OAuth 플로우 재트리거 (Keycloak 세션이 살아있으므로 자동 로그인 → A서비스 복귀)
+                window.location.href = buildOAuthLoginUrl({ clientId: INTERNAL_CLIENT_ID })
             } catch (err) {
                 let message = '회원가입에 실패했습니다. 다시 시도해 주세요.'
                 if (err instanceof HttpError && err.responseText) {
@@ -47,7 +48,7 @@ export default function ConsentCardSection() {
                 setIsSubmitting(false)
             }
         } else {
-            navigate(ROUTES.HOME)
+            navigate('/developer')
         }
     }
 

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { ROUTES, QUERY_PARAMS } from '@/shared/constants/routes'
-import { getStoredOAuthState, clearOAuthState, getRedirectToCanonicalOriginUrl } from '@/shared/utils/oauth'
+import { getStoredOAuthState, clearOAuthState, getRedirectToCanonicalOriginUrl, consumeReturnPath } from '@/shared/utils/oauth'
 import PageContainer from '@/shared/components/PageContainer'
 import LoadingSpinner from '@/shared/components/LoadingSpinner'
 
@@ -39,7 +39,10 @@ export default function AuthCallbackPage() {
 
     validatedRef.current = true
     clearOAuthState()
-    navigate(ROUTES.MAIN)
+
+    // 로그인 전에 저장한 returnPath로 이동, 없으면 /developer
+    const returnPath = consumeReturnPath() || ROUTES.DEVELOPER
+    navigate(returnPath)
     setIsLoading(false)
   }, [searchParams, navigate])
 

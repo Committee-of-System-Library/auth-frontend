@@ -21,11 +21,11 @@ export default function ErrorPage() {
   const timestamp = new Date().toISOString()
 
   const handleRetryLogin = () => {
-    navigate(ROUTES.HOME)
+    navigate(ROUTES.LOGIN)
   }
 
   const handleGoToMain = () => {
-    navigate(ROUTES.HOME)
+    navigate(ROUTES.LOGIN)
   }
 
   return (

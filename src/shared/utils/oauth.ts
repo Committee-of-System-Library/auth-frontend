@@ -3,6 +3,16 @@
  */
 export const OAUTH_STATE_KEY = 'oauth_state'
 
+/**
+ * 로그인 후 돌아갈 경로 저장 키
+ */
+export const RETURN_PATH_KEY = 'sso_return_path'
+
+/**
+ * 내부 SSO 클라이언트 ID (Admin/Developer 콘솔 로그인용)
+ */
+export const INTERNAL_CLIENT_ID = 'cse-internal'
+
 const AUTH_SERVER_BASE_URL = import.meta.env.VITE_AUTH_SERVER_BASE_URL as string
 const FRONTEND_BASE_URL = import.meta.env.VITE_FRONTEND_BASE_URL as string
 
@@ -57,33 +67,69 @@ export function saveOAuthState(): string {
 }
 
 /**
- * OAuth 로그인 URL을 생성한다.
- * Auth Server /login으로 이동 (서버가 Keycloak으로 302).
- * redirect_uri = 현재 창의 origin + '/auth/callback' (같은 origin으로 돌아와야 sessionStorage 유지)
- *
- * 백엔드 요구사항:
- * - 콜백 시 클라이언트가 이 URL에 담아 보낸 state를 세션에 저장했다가,
- *   로그인 성공 후 redirect_uri로 리다이렉트할 때 ?state=<저장한 값> 그대로 붙여 보내야 함.
- * - redirect_uri로 리다이렉트할 때 반드시 클라이언트가 보낸 redirect_uri와 동일한 URL을 써야 함.
+ * 로그인 후 돌아갈 경로를 sessionStorage에 저장한다.
  */
-export function buildOAuthLoginUrl(): string {
-  const baseUrl = getAuthServerBaseUrl()
-  const state = saveOAuthState()
-  // 개발: redirect_uri를 .env 기준으로 고정 → main.tsx 캐노니컬 리다이렉트와 맞추어 항상 같은 origin으로 돌아오게 함
+export function saveReturnPath(path: string): void {
+  sessionStorage.setItem(RETURN_PATH_KEY, path)
+}
+
+/**
+ * 저장된 returnPath를 꺼내고 삭제한다.
+ */
+export function consumeReturnPath(): string | null {
+  const path = sessionStorage.getItem(RETURN_PATH_KEY)
+  sessionStorage.removeItem(RETURN_PATH_KEY)
+  return path
+}
+
+function getOrigin(): string {
   const origin =
     import.meta.env.DEV && FRONTEND_BASE_URL?.trim()
       ? new URL(FRONTEND_BASE_URL.trim()).origin
       : typeof window !== 'undefined' && window.location?.origin
         ? window.location.origin
         : (FRONTEND_BASE_URL && FRONTEND_BASE_URL.trim()) || ''
+  return origin.replace(/\/$/, '')
+}
+
+function getBasePath(): string {
   const basePath = (import.meta.env.VITE_BASE_PATH as string)?.trim()
     ? `/${(import.meta.env.VITE_BASE_PATH as string).replace(/^\/|\/$/g, '')}`
     : ''
-  const redirectUri = `${origin.replace(/\/$/, '')}${basePath}/auth/callback`
+  return basePath
+}
+
+/**
+ * OAuth 로그인 URL을 생성한다.
+ * Auth Server /login으로 이동 (서버가 Keycloak으로 302).
+ *
+ * @param options.clientId - OAuth client_id (내부 로그인 시 'cse-internal')
+ * @param options.returnPath - 로그인 후 돌아갈 프론트 경로 (sessionStorage에 저장)
+ */
+export function buildOAuthLoginUrl(options?: {
+  clientId?: string
+  returnPath?: string
+}): string {
+  const baseUrl = getAuthServerBaseUrl()
+  const state = saveOAuthState()
+
+  if (options?.returnPath) {
+    saveReturnPath(options.returnPath)
+  }
+
+  const origin = getOrigin()
+  const basePath = getBasePath()
+  const redirectUri = `${origin}${basePath}/auth/callback`
+
   const params = new URLSearchParams({
     redirect_uri: redirectUri,
     state,
   })
+
+  if (options?.clientId) {
+    params.set('client_id', options.clientId)
+  }
+
   return `${baseUrl}/login?${params.toString()}`
 }
 

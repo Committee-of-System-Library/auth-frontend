@@ -1,5 +1,5 @@
 import { useLanguage } from '@/contexts/LanguageContext'
-import { buildOAuthLoginUrl } from '@/shared/utils/oauth'
+import { buildOAuthLoginUrl, INTERNAL_CLIENT_ID } from '@/shared/utils/oauth'
 import { loginTranslations } from '../translations'
 
 export default function LoginCardSection() {
@@ -7,7 +7,10 @@ export default function LoginCardSection() {
     const t = loginTranslations[language]
 
     const handleLoginClick = () => {
-        const url = buildOAuthLoginUrl()
+        const url = buildOAuthLoginUrl({
+            clientId: INTERNAL_CLIENT_ID,
+            returnPath: '/developer',
+        })
         window.location.href = url
     }
 
