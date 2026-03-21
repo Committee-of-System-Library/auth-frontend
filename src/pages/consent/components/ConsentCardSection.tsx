@@ -29,6 +29,7 @@ export default function ConsentCardSection() {
                 const res = await authApi.signup({
                     studentNumber: formData.studentId,
                     major: formData.major,
+                    userType: formData.userType,
                 })
                 // 회원가입 성공 → 서버에서 쿠키 설정 완료, redirectUrl로 바로 이동
                 if (res.redirectUrl) {

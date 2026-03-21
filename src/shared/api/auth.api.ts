@@ -7,10 +7,17 @@ export type MeResponse = {
     needsConsent?: boolean
 }
 
+export type VerifyResponse = {
+    isCseStudent: boolean
+    isKnuEmail: boolean
+    email: string
+}
+
 /** 회원가입 요청 */
 export type SignupRequest = {
     studentNumber: string
     major: string
+    userType: 'CSE_STUDENT' | 'KNU_OTHER_DEPT' | 'EXTERNAL'
 }
 
 export type SignupResponse = {
@@ -24,6 +31,8 @@ export type SignupResponse = {
 export const authApi = {
     me: () => authHttp<MeResponse>("/auth/me"),
     logout: () => authHttp<void>("/logout", { method: "POST" }),
+    verifyStudent: (studentNumber: string) =>
+        authHttp<VerifyResponse>(`/signup/verify?studentNumber=${encodeURIComponent(studentNumber)}`),
     signup: (body: SignupRequest) =>
         authHttp<SignupResponse>("/signup", {
             method: "POST",

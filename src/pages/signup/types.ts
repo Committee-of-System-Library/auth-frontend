@@ -4,4 +4,5 @@
 export interface SignupFormData {
   studentId: string
   major: string
+  userType: 'CSE_STUDENT' | 'KNU_OTHER_DEPT' | 'EXTERNAL'
 }
