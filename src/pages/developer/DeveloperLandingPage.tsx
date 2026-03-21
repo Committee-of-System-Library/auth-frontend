@@ -1,14 +1,13 @@
 import { ArrowRight } from 'lucide-react'
-import { buildOAuthLoginUrl, INTERNAL_CLIENT_ID } from '@/shared/utils/oauth'
+import { useNavigate } from 'react-router-dom'
+import { saveReturnPath } from '@/shared/utils/oauth'
 
 export default function DeveloperLandingPage() {
+    const navigate = useNavigate()
 
     const handleLogin = () => {
-        const url = buildOAuthLoginUrl({
-            clientId: INTERNAL_CLIENT_ID,
-            returnPath: '/developer/apps',
-        })
-        window.location.href = url
+        saveReturnPath('/developer/apps')
+        navigate('/login')
     }
 
     return (

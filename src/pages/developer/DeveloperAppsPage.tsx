@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { AppWindow, Plus } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { authApi } from '@/shared/api/auth.api'
-import { buildOAuthLoginUrl, INTERNAL_CLIENT_ID } from '@/shared/utils/oauth'
+import { saveReturnPath } from '@/shared/utils/oauth'
 import LoadingSpinner from '@/shared/components/LoadingSpinner'
 
 export default function DeveloperAppsPage() {
@@ -10,24 +10,22 @@ export default function DeveloperAppsPage() {
     const [isLoading, setIsLoading] = useState(true)
 
     useEffect(() => {
+        const redirectToLogin = () => {
+            saveReturnPath('/developer/apps')
+            navigate('/login')
+        }
         authApi.me()
             .then((res) => {
                 if (!res.authenticated) {
-                    window.location.href = buildOAuthLoginUrl({
-                        clientId: INTERNAL_CLIENT_ID,
-                        returnPath: '/developer/apps',
-                    })
+                    redirectToLogin()
                     return
                 }
                 setIsLoading(false)
             })
             .catch(() => {
-                window.location.href = buildOAuthLoginUrl({
-                    clientId: INTERNAL_CLIENT_ID,
-                    returnPath: '/developer/apps',
-                })
+                redirectToLogin()
             })
-    }, [])
+    }, [navigate])
 
     if (isLoading) {
         return (

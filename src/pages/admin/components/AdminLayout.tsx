@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
-import { NavLink, Outlet } from 'react-router-dom'
+import { NavLink, Outlet, useNavigate } from 'react-router-dom'
 import { Users, ShieldCheck, Database, AppWindow, LayoutDashboard, LogOut } from 'lucide-react'
 import { authApi } from '@/shared/api/auth.api'
-import { buildOAuthLoginUrl, INTERNAL_CLIENT_ID } from '@/shared/utils/oauth'
+import { saveReturnPath } from '@/shared/utils/oauth'
 import LoadingSpinner from '@/shared/components/LoadingSpinner'
 
 const navItems = [
@@ -17,16 +17,17 @@ type AuthState = 'loading' | 'authenticated' | 'forbidden'
 
 export default function AdminLayout() {
     const [authState, setAuthState] = useState<AuthState>('loading')
+    const navigate = useNavigate()
 
     useEffect(() => {
+        const redirectToLogin = () => {
+            saveReturnPath('/admin')
+            navigate('/login')
+        }
         authApi.me()
             .then((res) => {
                 if (!res.authenticated) {
-                    // 미인증 → SSO 로그인으로 리다이렉트
-                    window.location.href = buildOAuthLoginUrl({
-                        clientId: INTERNAL_CLIENT_ID,
-                        returnPath: '/admin',
-                    })
+                    redirectToLogin()
                     return
                 }
                 if (res.role !== 'ADMIN') {
@@ -36,13 +37,9 @@ export default function AdminLayout() {
                 setAuthState('authenticated')
             })
             .catch(() => {
-                // 401 등 → 미인증
-                window.location.href = buildOAuthLoginUrl({
-                    clientId: INTERNAL_CLIENT_ID,
-                    returnPath: '/admin',
-                })
+                redirectToLogin()
             })
-    }, [])
+    }, [navigate])
 
     const handleLogout = async () => {
         try {

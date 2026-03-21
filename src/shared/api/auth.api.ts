@@ -8,11 +8,10 @@ export type MeResponse = {
     needsConsent?: boolean
 }
 
-/** 회원가입 요청 - API 필드명 studentNumber */
+/** 회원가입 요청 */
 export type SignupRequest = {
     studentNumber: string
     major: string
-    grade: "FIRST" | "SECOND" | "THIRD" | "FOURTH" | "OTHERS"
 }
 
 export type SignupResponse = {

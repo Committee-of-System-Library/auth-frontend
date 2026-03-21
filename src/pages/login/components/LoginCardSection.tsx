@@ -7,10 +7,7 @@ export default function LoginCardSection() {
     const t = loginTranslations[language]
 
     const handleLoginClick = () => {
-        const url = buildOAuthLoginUrl({
-            clientId: INTERNAL_CLIENT_ID,
-            returnPath: '/developer',
-        })
+        const url = buildOAuthLoginUrl({ clientId: INTERNAL_CLIENT_ID })
         window.location.href = url
     }
 

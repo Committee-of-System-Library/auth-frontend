@@ -4,7 +4,7 @@ import { ChevronLeft, Plus, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { FormField } from '@/components/ui/form-field'
 import { authApi } from '@/shared/api/auth.api'
-import { buildOAuthLoginUrl, INTERNAL_CLIENT_ID } from '@/shared/utils/oauth'
+import { saveReturnPath } from '@/shared/utils/oauth'
 import LoadingSpinner from '@/shared/components/LoadingSpinner'
 
 export default function DeveloperAppNewPage() {
@@ -16,24 +16,22 @@ export default function DeveloperAppNewPage() {
     const [redirectUris, setRedirectUris] = useState<string[]>([''])
 
     useEffect(() => {
+        const redirectToLogin = () => {
+            saveReturnPath('/developer/apps/new')
+            navigate('/login')
+        }
         authApi.me()
             .then((res) => {
                 if (!res.authenticated) {
-                    window.location.href = buildOAuthLoginUrl({
-                        clientId: INTERNAL_CLIENT_ID,
-                        returnPath: '/developer/apps/new',
-                    })
+                    redirectToLogin()
                     return
                 }
                 setIsLoading(false)
             })
             .catch(() => {
-                window.location.href = buildOAuthLoginUrl({
-                    clientId: INTERNAL_CLIENT_ID,
-                    returnPath: '/developer/apps/new',
-                })
+                redirectToLogin()
             })
-    }, [])
+    }, [navigate])
 
     const addRedirectUri = () => setRedirectUris([...redirectUris, ''])
     const removeRedirectUri = (index: number) =>

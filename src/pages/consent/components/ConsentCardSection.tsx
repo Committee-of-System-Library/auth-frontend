@@ -29,9 +29,8 @@ export default function ConsentCardSection() {
                 await authApi.signup({
                     studentNumber: formData.studentId,
                     major: formData.major,
-                    grade: formData.grade,
                 })
-                // 회원가입 성공 → OAuth 플로우 재트리거 (Keycloak 세션이 살아있으므로 자동 로그인 → A서비스 복귀)
+                // 회원가입 성공 → OAuth 플로우 재트리거 (Keycloak 세션이 살아있으므로 자동 로그인 → 원래 서비스 복귀)
                 window.location.href = buildOAuthLoginUrl({ clientId: INTERNAL_CLIENT_ID })
             } catch (err) {
                 let message = '회원가입에 실패했습니다. 다시 시도해 주세요.'
@@ -68,7 +67,6 @@ export default function ConsentCardSection() {
         <div className="w-full max-w-md lg:max-w-xl bg-white rounded-2xl shadow-md p-6 lg:p-10 flex flex-col">
             {/* 상단 영역 */}
             <div>
-                {/* CONSENT 타이틀 */}
                 <div className="mb-2 flex items-center justify-center">
                     <h2 className="text-primary text-lg lg:text-2xl font-bold whitespace-nowrap">
                         회원가입 필수 약관 동의
@@ -113,24 +111,12 @@ export default function ConsentCardSection() {
                 </p>
             )}
 
-            {/* 버튼 영역: 뒤로가기 | 동의하고 회원가입 (회원가입 플로우) / 동의하고 계속 (기타) */}
-            <div className="flex gap-3 mt-2">
-                {isSignupFlow && (
-                    <Button
-                        type="button"
-                        variant="outline"
-                        size="lg"
-                        className="flex-1"
-                        onClick={() => navigate(-1)}
-                        disabled={isSubmitting}
-                    >
-                        뒤로가기
-                    </Button>
-                )}
+            {/* 버튼 */}
+            <div className="mt-2">
                 <Button
                     type="button"
                     size="lg"
-                    className="flex-1"
+                    fullWidth
                     onClick={handleContinue}
                     disabled={!isContinueEnabled || isSubmitting}
                     variant={isContinueEnabled ? 'primary' : 'secondary'}
@@ -145,4 +131,3 @@ export default function ConsentCardSection() {
         </div>
     )
 }
-
