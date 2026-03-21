@@ -1,170 +1,43 @@
 /**
- * 경북대학교 단과대학 및 학과/학부 목록 (타과생 선택용)
- * 2026년 기준 공식 홈페이지 기반. IT대학 컴퓨터학부는 CSE 전공 선택에서 처리하므로 제외.
+ * 경북대학교 단과대학/학과 데이터 (knuDepartments.json에서 로드)
+ *
+ * 관리 방법:
+ * - 학과 추가: departments 배열에 { "name": "xxx", "active": true } 추가
+ * - 학과 폐과: active를 false로 변경 (절대 삭제하지 않음 — 기존 가입자 데이터 하위호환)
+ * - 학과 명칭 변경: 기존 항목 active: false + 새 항목 추가
  */
+import data from './knuDepartments.json'
+
+export type KnuDepartment = {
+  name: string
+  active: boolean
+  /** 폐과/비활성화된 연도 (선택) */
+  deprecatedSince?: string
+}
+
 export type KnuCollege = {
   campus: '대구' | '상주'
   college: string
-  departments: string[]
+  departments: KnuDepartment[]
 }
 
-export const KNU_COLLEGES: KnuCollege[] = [
-  // ── 대구캠퍼스 ──
-  {
-    campus: '대구',
-    college: '인문대학',
-    departments: [
-      '국어국문학과', '영어영문학과', '사학과', '철학과',
-      '불어불문학과', '독어독문학과', '중어중문학과',
-      '고고인류학과', '일어일문학과', '한문학과', '노어노문학과',
-      '인문대학 자율학부',
-    ],
-  },
-  {
-    campus: '대구',
-    college: '사회과학대학',
-    departments: [
-      '정치외교학과', '사회학과', '지리학과',
-      '문헌정보학과', '심리학과', '사회복지학부', '미디어커뮤니케이션학과',
-      '사회과학대학 자율학부',
-    ],
-  },
-  {
-    campus: '대구',
-    college: '자연과학대학',
-    departments: [
-      '수학과', '물리학과', '화학과', '생물학과',
-      '생명공학부', '통계학과', '지구시스템과학부',
-      '자연과학대학 자율학부',
-    ],
-  },
-  {
-    campus: '대구',
-    college: '경상대학',
-    departments: ['경제통상학부', '경영학부', '경상대학 자율학부'],
-  },
-  {
-    campus: '대구',
-    college: '공과대학',
-    departments: [
-      '금속재료공학과', '신소재공학과', '기계공학부',
-      '건축학부', '토목공학과', '응용화학공학부',
-      '고분자공학과', '섬유시스템공학과', '환경공학과', '에너지공학부',
-      '공과대학 자율학부',
-    ],
-  },
-  {
-    campus: '대구',
-    college: 'IT대학',
-    departments: [
-      '전자공학부', '전자공학부 인공지능전공', '전자공학부 모바일공학전공',
-      '전기공학과', 'IT대학 자율학부', 'IT첨단자율학부',
-    ],
-  },
-  {
-    campus: '대구',
-    college: '농업생명과학대학',
-    departments: [
-      '응용생명과학부', '식물의학과', '식품공학부',
-      '산림과학·조경학부', '원예과학과', '바이오섬유소재학과',
-      '농업토목공학과', '스마트생물산업기계공학과',
-      '식품자원경제학과', '농산업학과',
-      '농업생명과학대학 자율학부',
-    ],
-  },
-  {
-    campus: '대구',
-    college: '예술대학',
-    departments: ['음악학과', '국악학과', '미술학과', '디자인학과'],
-  },
-  {
-    campus: '대구',
-    college: '사범대학',
-    departments: [
-      '교육학과', '국어교육과', '영어교육과', '유럽어교육학부',
-      '역사교육과', '지리교육과', '일반사회교육과', '윤리교육과',
-      '수학교육과', '물리교육과', '화학교육과', '생물교육과',
-      '지구과학교육과', '가정교육과', '체육교육과', '정보·컴퓨터교육과',
-    ],
-  },
-  {
-    campus: '대구',
-    college: '의과대학',
-    departments: ['의예과', '의학과'],
-  },
-  {
-    campus: '대구',
-    college: '치과대학',
-    departments: ['치의예과', '치의학과'],
-  },
-  {
-    campus: '대구',
-    college: '수의과대학',
-    departments: ['수의예과', '수의학과'],
-  },
-  {
-    campus: '대구',
-    college: '생활과학대학',
-    departments: ['아동학부', '의류학과', '식품영양학과'],
-  },
-  {
-    campus: '대구',
-    college: '간호대학',
-    departments: ['간호학과'],
-  },
-  {
-    campus: '대구',
-    college: '약학대학',
-    departments: ['약학과'],
-  },
-  {
-    campus: '대구',
-    college: '첨단기술융합대학',
-    departments: [
-      '스마트모빌리티공학과', '우주공학부', '혁신신약학과',
-      '의생명융합공학과', '로봇공학과',
-      '첨단기술융합대학 자율학부1', '첨단기술융합대학 자율학부2',
-    ],
-  },
-  {
-    campus: '대구',
-    college: '행정학부',
-    departments: ['행정학부'],
-  },
-  {
-    campus: '대구',
-    college: '자율전공학부',
-    departments: ['자율전공학부'],
-  },
-  {
-    campus: '대구',
-    college: '공과대학/농업생명과학대학',
-    departments: ['공학첨단자율학부'],
-  },
+export type KnuDepartmentsData = {
+  lastUpdated: string
+  note: string
+  colleges: KnuCollege[]
+}
 
-  // ── 상주캠퍼스 ──
-  {
-    campus: '상주',
-    college: '생태환경대학',
-    departments: [
-      '식물자원학과', '산림생태보호학과', '곤충생명과학과',
-      '관광학과', '체육학부', '축산학과',
-      '동물생명공학과', '말/특수동물학과',
-    ],
-  },
-  {
-    campus: '상주',
-    college: '과학기술대학',
-    departments: [
-      '건설방재공학과', '환경안전공학과', '정밀기계공학과',
-      '자동차공학과', '소프트웨어학과', '나노신소재공학과',
-      '에너지화학공학과', '식품외식산업학과', '섬유패션디자인학부',
-      '위치정보시스템학과', '스마트플랜트공학과', '치위생학과',
-    ],
-  },
-  {
-    campus: '상주',
-    college: '자율미래인재학부',
-    departments: ['자율미래인재학부'],
-  },
-]
+const departmentsData = data as KnuDepartmentsData
+
+/** 전체 데이터 (메타 정보 포함) */
+export const KNU_DEPARTMENTS_DATA = departmentsData
+
+/** active인 단과대학만 (departments에 active 항목이 1개 이상) */
+export const KNU_COLLEGES = departmentsData.colleges
+
+/** 특정 단과대학의 active 학과 목록 */
+export function getActiveDepartments(collegeName: string): string[] {
+  const college = departmentsData.colleges.find((c) => c.college === collegeName)
+  if (!college) return []
+  return college.departments.filter((d) => d.active).map((d) => d.name)
+}

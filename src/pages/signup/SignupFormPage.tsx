@@ -15,7 +15,7 @@ import { authApi } from '@/shared/api/auth.api'
 import LoadingSpinner from '@/shared/components/LoadingSpinner'
 import type { SignupFormData } from './types'
 import { MAJOR_OPTIONS } from './constants'
-import { KNU_COLLEGES } from './knuDepartments'
+import { KNU_COLLEGES, getActiveDepartments } from './knuDepartments'
 
 type Step = 'loading' | 'no_session' | 'student_number' | 'cse_major' | 'not_cse_choice' | 'other_dept' | 'external'
 
@@ -109,7 +109,7 @@ export default function SignupFormPage() {
         goToConsent({ studentId: '', major: '', userType: 'EXTERNAL' })
     }
 
-    const selectedCollegeData = KNU_COLLEGES.find((c) => c.college === college)
+    const activeDepartments = college ? getActiveDepartments(college) : []
 
     if (step === 'loading') {
         return (
@@ -281,18 +281,18 @@ export default function SignupFormPage() {
                                     </SelectTrigger>
                                     <SelectContent>
                                         <div className="px-2 py-1.5 text-[11px] font-semibold text-ink-300 uppercase tracking-wider">대구캠퍼스</div>
-                                        {KNU_COLLEGES.filter((c) => c.campus === '대구').map((c) => (
+                                        {KNU_COLLEGES.filter((c) => c.campus === '대구' && c.departments.some((d) => d.active)).map((c) => (
                                             <SelectItem key={c.college} value={c.college}>{c.college}</SelectItem>
                                         ))}
                                         <div className="px-2 py-1.5 text-[11px] font-semibold text-ink-300 uppercase tracking-wider mt-1">상주캠퍼스</div>
-                                        {KNU_COLLEGES.filter((c) => c.campus === '상주').map((c) => (
+                                        {KNU_COLLEGES.filter((c) => c.campus === '상주' && c.departments.some((d) => d.active)).map((c) => (
                                             <SelectItem key={c.college} value={c.college}>{c.college}</SelectItem>
                                         ))}
                                     </SelectContent>
                                 </Select>
                             </FormField>
 
-                            {college && selectedCollegeData && (
+                            {college && activeDepartments.length > 0 && (
                                 <FormField id="department" label="학과/학부" required error={errors.department}>
                                     <Select
                                         value={department || undefined}
@@ -308,7 +308,7 @@ export default function SignupFormPage() {
                                             <SelectValue placeholder="학과를 선택해주세요" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            {selectedCollegeData.departments.map((d) => (
+                                            {activeDepartments.map((d) => (
                                                 <SelectItem key={d} value={d}>{d}</SelectItem>
                                             ))}
                                         </SelectContent>
