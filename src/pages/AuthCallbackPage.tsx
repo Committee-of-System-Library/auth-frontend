@@ -40,6 +40,12 @@ export default function AuthCallbackPage() {
     validatedRef.current = true
     clearOAuthState()
 
+    // token 파라미터가 있으면 localStorage에 저장 (내부 서비스용)
+    const token = searchParams.get('token')
+    if (token) {
+      localStorage.setItem('sso_token', token)
+    }
+
     // 로그인 전에 저장한 returnPath로 이동, 없으면 /developer
     const returnPath = consumeReturnPath() || ROUTES.DEVELOPER
     navigate(returnPath)

@@ -33,11 +33,44 @@ export default function DeveloperAppNewPage() {
             })
     }, [navigate])
 
+    const [isSubmitting, setIsSubmitting] = useState(false)
+    const [error, setError] = useState<string | null>(null)
+
     const addRedirectUri = () => setRedirectUris([...redirectUris, ''])
     const removeRedirectUri = (index: number) =>
         setRedirectUris(redirectUris.filter((_, i) => i !== index))
     const updateRedirectUri = (index: number, value: string) =>
         setRedirectUris(redirectUris.map((uri, i) => (i === index ? value : uri)))
+
+    const handleSubmit = async () => {
+        setError(null)
+
+        if (!appName.trim()) {
+            setError('앱 이름을 입력해주세요.')
+            return
+        }
+
+        const validUris = redirectUris.filter((uri) => uri.trim())
+        if (validUris.length === 0) {
+            setError('Redirect URI를 최소 1개 이상 입력해주세요.')
+            return
+        }
+
+        setIsSubmitting(true)
+        try {
+            await authApi.developerApps.create({
+                appName: appName.trim(),
+                description: description.trim(),
+                redirectUris: validUris,
+                homepageUrl: homepageUrl.trim(),
+            })
+            navigate('/developer/apps')
+        } catch (e) {
+            setError(e instanceof Error ? e.message : '등록에 실패했습니다.')
+        } finally {
+            setIsSubmitting(false)
+        }
+    }
 
     if (isLoading) {
         return (
@@ -134,6 +167,10 @@ export default function DeveloperAppNewPage() {
                     </button>
                 </div>
 
+                {error && (
+                    <p className="text-danger text-sm">{error}</p>
+                )}
+
                 <div className="pt-4 flex gap-3">
                     <Button
                         variant="outline"
@@ -142,8 +179,12 @@ export default function DeveloperAppNewPage() {
                     >
                         취소
                     </Button>
-                    <Button className="flex-1">
-                        등록 신청
+                    <Button
+                        className="flex-1"
+                        onClick={handleSubmit}
+                        disabled={isSubmitting}
+                    >
+                        {isSubmitting ? '등록 중...' : '등록 신청'}
                     </Button>
                 </div>
             </div>
