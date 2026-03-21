@@ -1,13 +1,11 @@
 import { ArrowRight } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
-import { buildSSOLoginUrl } from '@/shared/utils/oauth'
 
 export default function DeveloperLandingPage() {
     const navigate = useNavigate()
 
-    const handleLogin = () => {
-        const url = buildSSOLoginUrl({ returnPath: '/developer/apps' })
-        navigate(url)
+    const handleStart = () => {
+        navigate('/developer/apps')
     }
 
     return (
@@ -24,10 +22,10 @@ export default function DeveloperLandingPage() {
                 </p>
                 <div className="flex flex-wrap gap-3">
                     <button
-                        onClick={handleLogin}
+                        onClick={handleStart}
                         className="inline-flex items-center gap-2 px-5 py-2.5 bg-ink text-white rounded-lg text-sm font-medium hover:bg-ink-700 transition-colors"
                     >
-                        로그인하고 시작하기
+                        시작하기
                         <ArrowRight className="w-4 h-4" />
                     </button>
                     <a
@@ -196,10 +194,10 @@ class UserController(
                 <div className="text-center">
                     <p className="text-ink-500 text-sm mb-4">앱을 등록하고 client_id를 발급받으세요.</p>
                     <button
-                        onClick={handleLogin}
+                        onClick={handleStart}
                         className="inline-flex items-center gap-2 px-5 py-2.5 bg-ink text-white rounded-lg text-sm font-medium hover:bg-ink-700 transition-colors"
                     >
-                        로그인하고 시작하기
+                        시작하기
                         <ArrowRight className="w-4 h-4" />
                     </button>
                 </div>

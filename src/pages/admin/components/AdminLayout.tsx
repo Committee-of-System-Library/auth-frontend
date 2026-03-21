@@ -47,7 +47,7 @@ export default function AdminLayout() {
         } catch {
             // ignore
         }
-        window.location.href = '/developer'
+        navigate('/developer')
     }
 
     if (authState === 'loading') {

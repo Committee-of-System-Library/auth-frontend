@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react'
-import { NavLink, Outlet } from 'react-router-dom'
-import { LogOut } from 'lucide-react'
+import { NavLink, Outlet, useNavigate } from 'react-router-dom'
+import { LogIn, LogOut } from 'lucide-react'
 import { authApi } from '@/shared/api/auth.api'
+import { buildSSOLoginUrl } from '@/shared/utils/oauth'
 
 export default function DeveloperLayout() {
+    const navigate = useNavigate()
     const [isLoggedIn, setIsLoggedIn] = useState(false)
 
     useEffect(() => {
@@ -18,7 +20,13 @@ export default function DeveloperLayout() {
         } catch {
             // ignore
         }
-        window.location.href = '/developer'
+        setIsLoggedIn(false)
+        navigate('/developer')
+    }
+
+    const handleLogin = () => {
+        const url = buildSSOLoginUrl({ returnPath: '/developer/apps' })
+        navigate(url)
     }
 
     return (
@@ -50,13 +58,21 @@ export default function DeveloperLayout() {
                         >
                             내 앱
                         </NavLink>
-                        {isLoggedIn && (
+                        {isLoggedIn ? (
                             <button
                                 onClick={handleLogout}
                                 className="flex items-center gap-1.5 text-ink-300 hover:text-danger font-medium transition-colors"
                             >
                                 <LogOut className="w-3.5 h-3.5" />
                                 로그아웃
+                            </button>
+                        ) : (
+                            <button
+                                onClick={handleLogin}
+                                className="flex items-center gap-1.5 text-ink-300 hover:text-primary font-medium transition-colors"
+                            >
+                                <LogIn className="w-3.5 h-3.5" />
+                                로그인
                             </button>
                         )}
                     </nav>
