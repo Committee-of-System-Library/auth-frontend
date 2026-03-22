@@ -42,7 +42,16 @@ export default function SignupFormPage() {
     useEffect(() => {
         authApi.me()
             .then((res) => {
-                setStep(res.authenticated ? 'student_number' : 'no_session')
+                if (!res.authenticated) {
+                    setStep('no_session')
+                    return
+                }
+                // @knu.ac.kr이 아니면 학번 입력 없이 바로 외부인 처리
+                if (res.email && !res.email.endsWith('@knu.ac.kr')) {
+                    setStep('external')
+                } else {
+                    setStep('student_number')
+                }
             })
             .catch(() => {
                 setStep('no_session')
@@ -333,19 +342,21 @@ export default function SignupFormPage() {
                             <div className="bg-surface-50 text-ink-500 text-sm rounded-lg px-4 py-3">
                                 {isKnuEmail
                                     ? '외부 사용자로 가입합니다. 일부 기능이 제한될 수 있습니다.'
-                                    : '경북대학교 외부 사용자로 가입합니다.'}
+                                    : '외부 사용자로 가입합니다.'}
                             </div>
                             <div className="flex gap-3 pt-2">
-                                <Button
-                                    type="button"
-                                    variant="outline"
-                                    onClick={() => isKnuEmail ? setStep('not_cse_choice') : setStep('student_number')}
-                                    className="flex-1"
-                                >
-                                    이전
-                                </Button>
+                                {isKnuEmail && (
+                                    <Button
+                                        type="button"
+                                        variant="outline"
+                                        onClick={() => setStep('not_cse_choice')}
+                                        className="flex-1"
+                                    >
+                                        이전
+                                    </Button>
+                                )}
                                 <Button type="button" onClick={handleExternalSubmit} className="flex-1">
-                                    다음
+                                    가입하기
                                 </Button>
                             </div>
                         </div>
