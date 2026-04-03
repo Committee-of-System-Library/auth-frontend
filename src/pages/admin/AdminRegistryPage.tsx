@@ -9,7 +9,7 @@ export default function AdminRegistryPage() {
     const [actionLoading, setActionLoading] = useState<string | null>(null)
     const [uploadResult, setUploadResult] = useState<RegistryUploadResult | null>(null)
     const [showAddModal, setShowAddModal] = useState(false)
-    const [addForm, setAddForm] = useState({ studentNumber: '', name: '', major: '컴퓨터학부', grade: 1 })
+    const [addForm, setAddForm] = useState({ studentNumber: '', name: '', major: '컴퓨터학부', grade: 1, enrollmentStatus: '재학' })
     const [addLoading, setAddLoading] = useState(false)
     const fileInputRef = useRef<HTMLInputElement>(null)
 
@@ -50,7 +50,7 @@ export default function AdminRegistryPage() {
             const created = await authApi.adminRegistry.add(addForm)
             setStudents(prev => [...prev, created])
             setShowAddModal(false)
-            setAddForm({ studentNumber: '', name: '', major: '컴퓨터학부', grade: 1 })
+            setAddForm({ studentNumber: '', name: '', major: '컴퓨터학부', grade: 1, enrollmentStatus: '재학' })
         } catch { alert('학생 추가에 실패했습니다.') }
         setAddLoading(false)
     }
@@ -120,19 +120,20 @@ export default function AdminRegistryPage() {
                             <th className="text-left px-6 py-4 text-xs font-semibold text-ink-300 uppercase tracking-wider">이름</th>
                             <th className="text-left px-6 py-4 text-xs font-semibold text-ink-300 uppercase tracking-wider">전공</th>
                             <th className="text-left px-6 py-4 text-xs font-semibold text-ink-300 uppercase tracking-wider">학년</th>
+                            <th className="text-left px-6 py-4 text-xs font-semibold text-ink-300 uppercase tracking-wider">학적상태</th>
                             <th className="text-right px-6 py-4 text-xs font-semibold text-ink-300 uppercase tracking-wider">작업</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-surface-50">
                         {loading ? (
                             <tr>
-                                <td colSpan={5} className="px-6 py-16 text-center">
+                                <td colSpan={6} className="px-6 py-16 text-center">
                                     <Loader2 className="w-5 h-5 animate-spin text-ink-200 mx-auto" />
                                 </td>
                             </tr>
                         ) : filtered.length === 0 ? (
                             <tr>
-                                <td colSpan={5} className="px-6 py-16 text-center text-ink-300 text-sm">
+                                <td colSpan={6} className="px-6 py-16 text-center text-ink-300 text-sm">
                                     {query ? '검색 결과가 없습니다.' : '등록된 학생이 없습니다.'}
                                 </td>
                             </tr>
@@ -142,6 +143,23 @@ export default function AdminRegistryPage() {
                                 <td className="px-6 py-3 text-sm text-ink font-medium">{s.name}</td>
                                 <td className="px-6 py-3 text-sm text-ink-500">{s.major}</td>
                                 <td className="px-6 py-3 text-sm text-ink-500">{s.grade}학년</td>
+                                <td className="px-6 py-3">
+                                    <select
+                                        value={s.enrollmentStatus ?? ''}
+                                        onChange={async (e) => {
+                                            const newStatus = e.target.value
+                                            try {
+                                                const updated = await authApi.adminRegistry.changeEnrollmentStatus(s.studentNumber, newStatus)
+                                                setStudents(prev => prev.map(x => x.id === updated.id ? updated : x))
+                                            } catch { alert('학적상태 변경에 실패했습니다.') }
+                                        }}
+                                        className="px-2 py-1 bg-surface-50 rounded-lg text-sm border-none focus:outline-none focus:ring-2 focus:ring-primary-200"
+                                    >
+                                        {['재학', '휴학', '휴학예정', '학사학위취득유예', '수료'].map(st => (
+                                            <option key={st} value={st}>{st}</option>
+                                        ))}
+                                    </select>
+                                </td>
                                 <td className="px-6 py-3 text-right">
                                     <button
                                         onClick={() => handleDelete(s)}
@@ -226,6 +244,15 @@ export default function AdminRegistryPage() {
                             >
                                 {[1, 2, 3, 4, 5].map(g => (
                                     <option key={g} value={g}>{g}학년</option>
+                                ))}
+                            </select>
+                            <select
+                                value={addForm.enrollmentStatus}
+                                onChange={e => setAddForm(f => ({ ...f, enrollmentStatus: e.target.value }))}
+                                className="w-full px-4 py-2.5 bg-surface-50 rounded-xl text-sm border-none focus:outline-none focus:ring-2 focus:ring-primary-200"
+                            >
+                                {['재학', '휴학', '휴학예정', '학사학위취득유예', '수료'].map(st => (
+                                    <option key={st} value={st}>{st}</option>
                                 ))}
                             </select>
                         </div>

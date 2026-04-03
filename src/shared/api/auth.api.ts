@@ -61,7 +61,7 @@ export type VerificationRequest = {
 /** CSE 학생 명단 */
 export type CseStudentRegistry = {
     id: number; studentNumber: string; name: string;
-    major: string; grade: number;
+    major: string; grade: number; enrollmentStatus: string | null;
     manuallyAdded: boolean; createdAt: string; updatedAt: string;
 }
 
@@ -171,10 +171,15 @@ export const authApi = {
                 body: form,
             })
         },
-        add: (body: { studentNumber: string; name: string; major: string; grade: number }) =>
+        add: (body: { studentNumber: string; name: string; major: string; grade: number; enrollmentStatus?: string }) =>
             authHttp<CseStudentRegistry>("/appfn/api/admin/registry", {
                 method: "POST",
                 body: JSON.stringify(body),
+            }),
+        changeEnrollmentStatus: (studentNumber: string, enrollmentStatus: string) =>
+            authHttp<CseStudentRegistry>(`/appfn/api/admin/registry/${studentNumber}/enrollment-status`, {
+                method: "PUT",
+                body: JSON.stringify({ enrollmentStatus }),
             }),
         delete: (studentNumber: string) =>
             authHttp<void>(`/appfn/api/admin/registry/${studentNumber}`, { method: "DELETE" }),
