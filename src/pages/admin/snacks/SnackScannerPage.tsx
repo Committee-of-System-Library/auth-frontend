@@ -119,11 +119,14 @@ export default function SnackScannerPage() {
             className="fixed inset-0 z-[60] flex flex-col overflow-hidden bg-black text-white"
             onClick={handlePrime}
         >
-            {/* Camera viewport */}
-            <div
-                id={elementId}
-                className="absolute inset-0 [&_video]:!h-full [&_video]:!w-full [&_video]:object-cover"
-            />
+            {/* Camera viewport — html5-qrcode forces position:relative on its mount node,
+                so we wrap it in an absolute container instead of fighting that inline style. */}
+            <div className="absolute inset-0 overflow-hidden">
+                <div
+                    id={elementId}
+                    className="h-full w-full [&_video]:!h-full [&_video]:!w-full [&_video]:object-cover"
+                />
+            </div>
 
             {/* Vignette */}
             <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/75" />
