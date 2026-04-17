@@ -14,7 +14,6 @@ import { cn } from '@/lib/utils'
 import { authApi } from '@/shared/api/auth.api'
 import LoadingSpinner from '@/shared/components/LoadingSpinner'
 import type { SignupFormData } from './types'
-import { MAJOR_OPTIONS } from './constants'
 import { KNU_COLLEGES, getActiveDepartments } from './knuDepartments'
 
 type Step = 'loading' | 'no_session' | 'student_number' | 'cse_major' | 'not_cse_choice' | 'other_dept' | 'external'
@@ -73,6 +72,7 @@ export default function SignupFormPage() {
             setIsKnuEmail(res.isKnuEmail)
 
             if (res.isCseStudent) {
+                setCseMajor(res.major ?? '')
                 setStep('cse_major')
             } else if (res.isKnuEmail) {
                 setStep('not_cse_choice')
@@ -92,12 +92,8 @@ export default function SignupFormPage() {
         navigate(ROUTES.CONSENT, { state: { formData: data } })
     }
 
-    // CSE 전공 선택 제출
+    // CSE 전공 확인 제출 — major 는 서버가 registry 기준으로 override
     const handleCseMajorSubmit = () => {
-        if (!cseMajor) {
-            setErrors({ cseMajor: '전공을 선택해주세요.' })
-            return
-        }
         goToConsent({ studentId, major: cseMajor, userType: 'CSE_STUDENT' })
     }
 
@@ -153,7 +149,7 @@ export default function SignupFormPage() {
                     <h1 className="text-xl font-bold text-ink mb-1 text-center">회원가입</h1>
                     <p className="text-ink-300 text-sm mb-8 text-center">
                         {step === 'student_number' && '학번을 입력해 학적을 확인합니다.'}
-                        {step === 'cse_major' && '컴퓨터학부 학생으로 확인되었습니다. 전공을 선택해주세요.'}
+                        {step === 'cse_major' && '학적 정보를 확인해주세요.'}
                         {step === 'not_cse_choice' && '컴퓨터학부 학생 목록에서 확인되지 않았습니다.'}
                         {step === 'other_dept' && '소속 단과대학과 학과를 선택해주세요.'}
                         {step === 'external' && '외부 사용자로 가입합니다.'}
@@ -192,39 +188,34 @@ export default function SignupFormPage() {
                         </div>
                     )}
 
-                    {/* Step 2a: CSE 전공 선택 */}
+                    {/* Step 2a: CSE 학적 확인 — registry 기준 자동 입력 */}
                     {step === 'cse_major' && (
                         <div className="space-y-5">
                             <div className="bg-emerald-50 text-emerald-700 text-sm rounded-lg px-4 py-3">
                                 컴퓨터학부 재학생으로 확인되었습니다.
                             </div>
-                            <FormField id="cseMajor" label="전공" required error={errors.cseMajor}>
-                                <Select
-                                    value={cseMajor || undefined}
-                                    onValueChange={(v) => {
-                                        setCseMajor(v)
-                                        if (errors.cseMajor) setErrors({})
-                                    }}
-                                >
-                                    <SelectTrigger
-                                        id="cseMajor"
-                                        className={cn('h-12 w-full rounded-xl bg-surface-50 border-none', errors.cseMajor && 'ring-2 ring-danger/30')}
-                                    >
-                                        <SelectValue placeholder="전공을 선택해주세요" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        {MAJOR_OPTIONS.map((opt) => (
-                                            <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-                            </FormField>
+                            <div className="bg-surface-50 rounded-xl px-4 py-4 space-y-2">
+                                <div className="flex justify-between text-sm">
+                                    <span className="text-ink-300">학번</span>
+                                    <span className="text-ink font-medium">{studentId}</span>
+                                </div>
+                                <div className="flex justify-between text-sm">
+                                    <span className="text-ink-300">전공</span>
+                                    <span className="text-ink font-medium">
+                                        {cseMajor || '전공 정보 없음'}
+                                    </span>
+                                </div>
+                            </div>
+                            <p className="text-ink-300 text-xs text-center">
+                                학적 정보는 학부 행정 기준으로 자동 입력됩니다.<br />
+                                전공 변경은 학부 사무실을 통해 갱신된 후 반영됩니다.
+                            </p>
                             <div className="flex gap-3 pt-2">
                                 <Button type="button" variant="outline" onClick={() => setStep('student_number')} className="flex-1">
                                     이전
                                 </Button>
                                 <Button type="button" onClick={handleCseMajorSubmit} className="flex-1">
-                                    다음
+                                    확인
                                 </Button>
                             </div>
                         </div>

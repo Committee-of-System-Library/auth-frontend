@@ -11,6 +11,7 @@ export type VerifyResponse = {
     isCseStudent: boolean
     isKnuEmail: boolean
     email: string
+    major: string | null
 }
 
 /** 회원가입 요청 */
