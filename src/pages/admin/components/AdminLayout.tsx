@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { NavLink, Outlet, useNavigate } from 'react-router-dom'
-import { Users, ShieldCheck, Database, AppWindow, LayoutDashboard, LogOut } from 'lucide-react'
+import { Users, ShieldCheck, Database, AppWindow, LayoutDashboard, LogOut, UtensilsCrossed } from 'lucide-react'
 import { authApi } from '@/shared/api/auth.api'
 import { buildSSOLoginUrl } from '@/shared/utils/oauth'
 import LoadingSpinner from '@/shared/components/LoadingSpinner'
@@ -11,6 +11,7 @@ const navItems = [
     { to: '/admin/verifications', icon: ShieldCheck, label: '인증 요청' },
     { to: '/admin/registry', icon: Database, label: '학생 명단' },
     { to: '/admin/apps', icon: AppWindow, label: '클라이언트 관리' },
+    { to: '/admin/snacks', icon: UtensilsCrossed, label: '야식마차' },
 ]
 
 type AuthState = 'loading' | 'authenticated' | 'forbidden'
