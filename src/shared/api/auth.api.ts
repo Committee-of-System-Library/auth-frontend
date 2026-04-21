@@ -43,7 +43,7 @@ export type ClientApplication = {
 /** 사용자 (admin) */
 export type Student = {
     id: number; name: string; studentNumber: string;
-    major: string; grade: string | null; gender: string | null;
+    major: string; gender: string | null;
     userType: 'CSE_STUDENT' | 'KNU_OTHER_DEPT' | 'EXTERNAL';
     role: 'ADMIN' | 'EXECUTIVE' | 'FINANCE' | 'PLANNING' | 'PR' | 'CULTURE' | 'STUDENT' | null;
     createdAt: string; updatedAt: string;
