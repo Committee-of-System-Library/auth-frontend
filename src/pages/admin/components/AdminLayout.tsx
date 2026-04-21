@@ -14,6 +14,8 @@ const navItems = [
     { to: '/admin/snacks', icon: UtensilsCrossed, label: '야식마차' },
 ]
 
+const ADMIN_ROLES = ['ADMIN', 'EXECUTIVE', 'FINANCE', 'PLANNING', 'PR', 'CULTURE'] as const
+
 type AuthState = 'loading' | 'authenticated' | 'forbidden'
 
 export default function AdminLayout() {
@@ -31,7 +33,7 @@ export default function AdminLayout() {
                     redirectToLogin()
                     return
                 }
-                if (res.role !== 'ADMIN') {
+                if (!res.role || !ADMIN_ROLES.includes(res.role as typeof ADMIN_ROLES[number])) {
                     setAuthState('forbidden')
                     return
                 }
