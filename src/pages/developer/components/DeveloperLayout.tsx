@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { NavLink, Outlet, useNavigate } from 'react-router-dom'
-import { LogIn, LogOut, Lock } from 'lucide-react'
+import { LogIn, LogOut, Search } from 'lucide-react'
 import { authApi } from '@/shared/api/auth.api'
 import { buildSSOLoginUrl } from '@/shared/utils/oauth'
 
@@ -39,57 +39,63 @@ export default function DeveloperLayout() {
 
     return (
         <div className="min-h-screen bg-surface-50">
-            <header className="bg-white border-b border-surface-200 sticky top-0 z-10">
-                <div className="max-w-5xl mx-auto px-6 py-3.5 flex items-center justify-between">
-                    <NavLink to="/developer" className="flex items-center gap-2.5">
-                        <div className="w-7 h-7 bg-ink rounded-lg flex items-center justify-center">
-                            <span className="text-white text-[10px] font-bold">S</span>
+            <header className="bg-white/95 backdrop-blur border-b border-surface-200 sticky top-0 z-20">
+                <div className="max-w-[1320px] mx-auto px-6 lg:px-8 py-3 flex items-center gap-6">
+                    <NavLink to="/developer" className="flex items-center gap-2.5 flex-shrink-0">
+                        <div className="w-7 h-7 bg-ink rounded-md flex items-center justify-center">
+                            <span className="text-white text-[10px] font-bold tracking-wider">CSE</span>
                         </div>
-                        <p className="text-ink font-bold text-sm">CSE SSO</p>
+                        <div className="leading-none">
+                            <p className="text-ink font-semibold text-[13.5px]">Developer Portal</p>
+                            <p className="text-ink-300 text-[10px] font-mono tracking-wider mt-0.5">v1.2.0</p>
+                        </div>
                     </NavLink>
-                    <nav className="flex items-center gap-4 text-sm">
-                        <NavLink
-                            to="/developer"
-                            end
-                            className={({ isActive }) =>
-                                `font-medium transition-colors ${isActive ? 'text-ink' : 'text-ink-300 hover:text-ink-500'}`
-                            }
+
+                    <div className="hidden md:flex flex-1 max-w-md">
+                        <button
+                            className="w-full flex items-center gap-2 px-3 py-1.5 bg-surface-100 border border-surface-200 rounded-md text-ink-300 hover:text-ink-500 text-[13px] transition-colors"
+                            title="검색 (준비 중)"
+                            disabled
                         >
-                            문서
-                        </NavLink>
+                            <Search className="w-3.5 h-3.5" />
+                            <span className="flex-1 text-left">문서 검색</span>
+                            <kbd className="font-mono text-[10px] bg-white px-1.5 py-0.5 rounded border border-surface-300 text-ink-300">
+                                ⌘K
+                            </kbd>
+                        </button>
+                    </div>
+
+                    <nav className="flex items-center gap-5 text-sm ml-auto">
+                        <a
+                            href="https://github.com/Committee-of-System-Library"
+                            target="_blank"
+                            rel="noreferrer"
+                            className="hidden sm:block text-ink-500 hover:text-ink font-medium transition-colors text-[13.5px]"
+                        >
+                            GitHub
+                        </a>
                         <NavLink
                             to="/developer/apps"
                             className={({ isActive }) =>
-                                `font-medium transition-colors ${isActive ? 'text-ink' : 'text-ink-300 hover:text-ink-500'}`
+                                `font-medium transition-colors text-[13.5px] ${
+                                    isActive ? 'text-ink' : 'text-ink-500 hover:text-ink'
+                                }`
                             }
                         >
-                            내 앱
+                            대시보드
                         </NavLink>
-                        {isStaff && (
-                            <NavLink
-                                to="/developer/architecture"
-                                className={({ isActive }) =>
-                                    `flex items-center gap-1.5 font-medium transition-colors ${
-                                        isActive ? 'text-primary' : 'text-ink-300 hover:text-primary'
-                                    }`
-                                }
-                            >
-                                <Lock className="w-3 h-3" />
-                                내부 아키텍처
-                            </NavLink>
-                        )}
                         {isLoggedIn ? (
                             <button
                                 onClick={handleLogout}
-                                className="flex items-center gap-1.5 text-ink-300 hover:text-danger font-medium transition-colors"
+                                className="flex items-center gap-1.5 text-ink-500 hover:text-danger font-medium transition-colors text-[13.5px]"
                             >
                                 <LogOut className="w-3.5 h-3.5" />
-                                로그아웃
+                                <span className="hidden sm:inline">로그아웃</span>
                             </button>
                         ) : (
                             <button
                                 onClick={handleLogin}
-                                className="flex items-center gap-1.5 text-ink-300 hover:text-primary font-medium transition-colors"
+                                className="flex items-center gap-1.5 px-3 py-1.5 bg-ink text-white hover:bg-ink-700 font-medium transition-colors rounded-md text-[13px]"
                             >
                                 <LogIn className="w-3.5 h-3.5" />
                                 로그인
@@ -99,9 +105,7 @@ export default function DeveloperLayout() {
                 </div>
             </header>
 
-            <main className="max-w-5xl mx-auto px-6 py-8">
-                <Outlet context={{ isLoggedIn, role, isStaff }} />
-            </main>
+            <Outlet context={{ isLoggedIn, role, isStaff }} />
         </div>
     )
 }

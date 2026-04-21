@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react'
 import { AppWindow, Plus, Clock, CheckCircle, XCircle, Pause, Copy } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useOutletContext } from 'react-router-dom'
 import { authApi, type ClientApplication } from '@/shared/api/auth.api'
 import { buildSSOLoginUrl } from '@/shared/utils/oauth'
 import LoadingSpinner from '@/shared/components/LoadingSpinner'
+import DocsShell from './_docs/DocsShell'
+import type { DeveloperOutletContext } from './components/DeveloperLayout'
 
 const statusConfig = {
     PENDING: { label: '승인 대기', icon: Clock, color: 'text-amber-600 bg-amber-50' },
@@ -14,6 +16,7 @@ const statusConfig = {
 
 export default function DeveloperAppsPage() {
     const navigate = useNavigate()
+    const { isStaff } = useOutletContext<DeveloperOutletContext>()
     const [isLoading, setIsLoading] = useState(true)
     const [apps, setApps] = useState<ClientApplication[]>([])
     const [copiedId, setCopiedId] = useState<string | null>(null)
@@ -48,13 +51,14 @@ export default function DeveloperAppsPage() {
 
     if (isLoading) {
         return (
-            <div className="py-20">
-                <LoadingSpinner message="확인 중..." size="md" />
-            </div>
+            <DocsShell isStaff={isStaff} toc={false} pager={false}>
+                <div className="py-20"><LoadingSpinner message="확인 중..." size="md" /></div>
+            </DocsShell>
         )
     }
 
     return (
+        <DocsShell isStaff={isStaff} toc={false} pager={false}>
         <div className="animate-fade-up">
             <div className="flex items-center justify-between mb-6">
                 <h1 className="text-lg font-bold text-ink">내 애플리케이션</h1>
@@ -138,5 +142,6 @@ export default function DeveloperAppsPage() {
                 </div>
             )}
         </div>
+        </DocsShell>
     )
 }

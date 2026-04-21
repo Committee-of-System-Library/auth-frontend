@@ -4,6 +4,7 @@ import { Lock, AlertTriangle } from 'lucide-react'
 import { authApi, type ArchitectureDoc, type ArchitectureBlock } from '@/shared/api/auth.api'
 import type { DeveloperOutletContext } from './components/DeveloperLayout'
 import LoadingSpinner from '@/shared/components/LoadingSpinner'
+import DocsShell from './_docs/DocsShell'
 
 type LoadState =
     | { kind: 'loading' }
@@ -26,60 +27,47 @@ export default function DeveloperArchitecturePage() {
         return () => { active = false }
     }, [isLoggedIn, isStaff])
 
-    if (!isLoggedIn) return <GateMessage title="로그인이 필요합니다" body="내부 아키텍처 문서는 임원 권한이 있는 사용자만 열람할 수 있습니다." />
-    if (!isStaff) return <GateMessage title="권한이 부족합니다" body="ADMIN 또는 학생회 임원 계정으로만 열람 가능합니다." tone="forbidden" />
-
-    if (state.kind === 'loading') {
-        return (
-            <div className="py-24">
-                <LoadingSpinner message="문서 로드 중..." size="md" />
-            </div>
-        )
-    }
-
-    if (state.kind === 'error') {
-        return (
-            <div className="py-10">
-                <div className="bg-white border border-danger/30 p-6 flex gap-3 items-start">
-                    <AlertTriangle className="w-5 h-5 text-danger flex-shrink-0 mt-0.5" />
-                    <div>
-                        <h2 className="text-sm font-semibold text-ink">문서를 불러올 수 없습니다</h2>
-                        <p className="text-ink-500 text-sm mt-1 font-mono">
-                            {state.status ? `HTTP ${state.status} — ` : ''}
-                            {state.message}
-                        </p>
+    return (
+        <DocsShell isStaff={isStaff} toc={false} pager={false}>
+            {!isLoggedIn && <GateMessage title="로그인이 필요합니다" body="내부 아키텍처 문서는 임원 권한이 있는 사용자만 열람할 수 있습니다." />}
+            {isLoggedIn && !isStaff && <GateMessage title="권한이 부족합니다" body="ADMIN 또는 학생회 임원 계정으로만 열람 가능합니다." tone="forbidden" />}
+            {isLoggedIn && isStaff && state.kind === 'loading' && (
+                <div className="py-24"><LoadingSpinner message="문서 로드 중..." size="md" /></div>
+            )}
+            {isLoggedIn && isStaff && state.kind === 'error' && (
+                <div className="py-10">
+                    <div className="bg-white border border-danger/30 p-6 flex gap-3 items-start rounded-md">
+                        <AlertTriangle className="w-5 h-5 text-danger flex-shrink-0 mt-0.5" />
+                        <div>
+                            <h2 className="text-sm font-semibold text-ink">문서를 불러올 수 없습니다</h2>
+                            <p className="text-ink-500 text-sm mt-1 font-mono">
+                                {state.status ? `HTTP ${state.status} — ` : ''}
+                                {state.message}
+                            </p>
+                        </div>
                     </div>
                 </div>
-            </div>
-        )
-    }
-
-    return <ArchitectureView doc={state.doc} role={role} />
+            )}
+            {isLoggedIn && isStaff && state.kind === 'ok' && (
+                <ArchitectureView doc={state.doc} role={role} />
+            )}
+        </DocsShell>
+    )
 }
 
 function ArchitectureView({ doc, role }: { doc: ArchitectureDoc; role: string | null }) {
     return (
-        <div className="animate-fade-up relative">
-            <div className="absolute inset-0 grid-paper-fine opacity-40 pointer-events-none -z-10" />
-
+        <div className="animate-fade-up">
             <DocumentHeader doc={doc} role={role} />
-
-            <div className="lg:grid lg:grid-cols-[180px_1fr] lg:gap-10 mt-4">
-                <TableOfContents sections={doc.sections} />
-
-                <main className="min-w-0">
-                    {doc.sections.map((section, idx) => (
-                        <SectionView
-                            key={section.id}
-                            section={section}
-                            index={idx + 1}
-                            total={doc.sections.length}
-                        />
-                    ))}
-
-                    <DocumentFooter doc={doc} />
-                </main>
-            </div>
+            {doc.sections.map((section, idx) => (
+                <SectionView
+                    key={section.id}
+                    section={section}
+                    index={idx + 1}
+                    total={doc.sections.length}
+                />
+            ))}
+            <DocumentFooter doc={doc} />
         </div>
     )
 }
@@ -123,33 +111,6 @@ function HeaderMeta({ label, value }: { label: string; value: string }) {
             <dt className="text-ink-300 mb-1">{label}</dt>
             <dd className="text-ink font-medium uppercase">{value}</dd>
         </div>
-    )
-}
-
-function TableOfContents({ sections }: { sections: ArchitectureDoc['sections'] }) {
-    return (
-        <aside className="hidden lg:block">
-            <div className="sticky top-20 pt-10">
-                <p className="font-mono text-[10px] tracking-widest text-ink-300 uppercase mb-4">
-                    Index
-                </p>
-                <ol className="space-y-1">
-                    {sections.map((s, i) => (
-                        <li key={s.id}>
-                            <a
-                                href={`#${s.id}`}
-                                className="group flex items-baseline gap-3 py-1.5 text-[13px] text-ink-500 hover:text-ink transition-colors"
-                            >
-                                <span className="font-mono text-[10px] text-ink-300 group-hover:text-primary transition-colors w-5 flex-shrink-0">
-                                    {String(i + 1).padStart(2, '0')}
-                                </span>
-                                <span className="leading-snug">{s.title}</span>
-                            </a>
-                        </li>
-                    ))}
-                </ol>
-            </div>
-        </aside>
     )
 }
 

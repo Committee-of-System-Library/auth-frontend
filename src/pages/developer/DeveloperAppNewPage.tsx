@@ -1,14 +1,17 @@
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useOutletContext } from 'react-router-dom'
 import { ChevronLeft, Plus, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { FormField } from '@/components/ui/form-field'
 import { authApi } from '@/shared/api/auth.api'
 import { buildSSOLoginUrl } from '@/shared/utils/oauth'
 import LoadingSpinner from '@/shared/components/LoadingSpinner'
+import DocsShell from './_docs/DocsShell'
+import type { DeveloperOutletContext } from './components/DeveloperLayout'
 
 export default function DeveloperAppNewPage() {
     const navigate = useNavigate()
+    const { isStaff } = useOutletContext<DeveloperOutletContext>()
     const [isLoading, setIsLoading] = useState(true)
     const [appName, setAppName] = useState('')
     const [description, setDescription] = useState('')
@@ -74,13 +77,14 @@ export default function DeveloperAppNewPage() {
 
     if (isLoading) {
         return (
-            <div className="py-20">
-                <LoadingSpinner message="확인 중..." size="md" />
-            </div>
+            <DocsShell isStaff={isStaff} toc={false} pager={false}>
+                <div className="py-20"><LoadingSpinner message="확인 중..." size="md" /></div>
+            </DocsShell>
         )
     }
 
     return (
+        <DocsShell isStaff={isStaff} toc={false} pager={false}>
         <div className="animate-fade-up max-w-2xl">
             <button
                 onClick={() => navigate('/developer/apps')}
@@ -189,5 +193,6 @@ export default function DeveloperAppNewPage() {
                 </div>
             </div>
         </div>
+        </DocsShell>
     )
 }
